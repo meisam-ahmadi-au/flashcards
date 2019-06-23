@@ -1,7 +1,7 @@
 language: node_js
-node_ja: -10.15.0
+node_ja: - "10.15.0"
 script:
-  - echo 'deploying...'
+  - echo "deploying..."
 install:
   - npm i firebase-tools -g
 after_success:
