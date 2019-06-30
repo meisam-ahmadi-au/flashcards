@@ -1,0 +1,31 @@
+.add-card {
+  width: 80%;
+  margin: auto;
+  display: flex;
+  flex-flow: column;
+  align-items: flex-start;
+  font-size: 20px;
+
+  input,
+  select {
+    width: 100%;
+    display: block;
+    margin: 20px 0 25px;
+    border: none;
+    border-bottom: 1px solid grey;
+    font-size: inherit;
+
+    &:focus {
+      border: none;
+      outline: none;
+      border-bottom: 1px solid green;
+    }
+  }
+
+  button {
+    border: none;
+    width: 100%;
+    height: 50px;
+    background: #006effa1;
+  }
+}
