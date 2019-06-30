@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import Api from '../../api/Api';
 
-class Authenticate extends Component {
+interface IAuthProps extends RouteComponentProps {
+  setAuthenticate: (a: boolean) => void;
+}
+
+class Authenticate extends Component<IAuthProps> {
   public state = {
     isAuthenticated: false,
     isChecking: false,
@@ -9,14 +14,12 @@ class Authenticate extends Component {
     username: ''
   };
 
-  public authenticateUser = () => {
+  public authenticateUser = (e: React.SyntheticEvent) => {
+    e.preventDefault();
     const { username, password } = this.state;
     if (username && password) {
       Api.signin(username, password).then(data => {
-        // @ts-ignore
-        console.log(data.tokenId);
-        console.log(this.props);
-        // @ts-ignore
+        this.props.setAuthenticate(true);
         this.props.history.push('/addcard');
       });
     }
@@ -29,27 +32,30 @@ class Authenticate extends Component {
 
   public render() {
     return (
-      <form>
-        <label htmlFor="username">Username:</label>
-        <input
-          type="text"
-          name="username"
-          onChange={this.onInputChange}
-          value={this.state.username}
-        />
-        <label htmlFor="password">Password:</label>
-        <input
-          type="password"
-          name="password"
-          onChange={this.onInputChange}
-          value={this.state.password}
-        />
-        <button onClick={this.authenticateUser} type="submit">
-          Submit
-        </button>
-      </form>
+      <>
+        <form onSubmit={this.authenticateUser} className="signin">
+          <label htmlFor="username">Username:</label>
+          <input
+            type="text"
+            name="username"
+            onChange={this.onInputChange}
+            value={this.state.username}
+          />
+          <label htmlFor="password">Password:</label>
+          <input
+            type="password"
+            name="password"
+            onChange={this.onInputChange}
+            value={this.state.password}
+          />
+          <button onClick={this.authenticateUser} type="submit">
+            Submit
+          </button>
+        </form>
+      </>
     );
   }
 }
 
-export default Authenticate;
+// @ts-ignore
+export default withRouter(Authenticate);

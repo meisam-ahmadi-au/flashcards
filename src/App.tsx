@@ -3,20 +3,21 @@ import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import './App.css';
 import AddCard from './components/AddCard/AddCard';
 import Authenticate from './components/Authenticate/Authenticate';
-import GoogleAuthentication from './components/Authenticate/GoogleAuthentication';
 import CategoryContainer from './components/Decks/DeckContainer';
+import Home from './components/Home/Home';
+import Navbar from './components/Navbar/Navbar';
 
 const App: React.FC = () => {
-  // const [isAuthenticated, setAuthenticate] = React.useState(false);
+  const [isAuthenticated, setAuthenticate] = React.useState(false);
   return (
     <BrowserRouter>
       <div className="App">
-        <GoogleAuthentication />
+        <Navbar setAuthenticate={setAuthenticate} />
         <Switch>
-          <Route path="/signin" component={Authenticate} />
           <Route path="/addcard" component={AddCard} />
-          <Route path="/" exact={true} component={CategoryContainer} />
-          <Redirect to="/signin"/>
+          <Route path="/categories" component={CategoryContainer} />
+          <Route path="/" exact={true} component={Home} />
+          <Redirect to="/" />
         </Switch>
       </div>
     </BrowserRouter>
