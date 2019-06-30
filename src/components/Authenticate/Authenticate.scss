@@ -1,15 +1,19 @@
 .auth {
-  list-style: none;
-  display: flex;
-  justify-content: flex-end;
+  white-space: nowrap;
 
-  &-hidden {
-    display: none;
+  &-input {
+    border: none;
+    border-bottom: 1px solid grey;
+    margin: 0 10px;
+
+    &:focus {
+      outline: none;
+      border-bottom: 2px solid green;
+    }
   }
 
-  li {
-    padding: 10px;
-    margin: 10px;
-    background: rgb(218, 47, 47);
+  &-submit {
+    border: none;
+    padding: 5px;
   }
 }
