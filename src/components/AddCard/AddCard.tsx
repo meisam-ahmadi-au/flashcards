@@ -1,10 +1,11 @@
 import React, { Component, SyntheticEvent } from 'react';
 import Api from '../../api/Api';
+import TextToSpeech from '../TextToSpeech/TextToSpeech';
 import './AddCard.scss';
 
 class AddCards extends Component {
   public state = {
-    categories: null,
+    categories: null || {},
     category: '',
     front: '',
     back: ''
@@ -20,7 +21,6 @@ class AddCards extends Component {
   };
 
   public onSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    debugger;
     const { name, value } = event.currentTarget;
     this.setState({ [name]: value });
   };
@@ -28,7 +28,6 @@ class AddCards extends Component {
   public renderCategories = () => {
     let options = null;
     if (this.state.categories) {
-      // @ts-ignore
       options = Object.keys(this.state.categories).map(category => (
         <option value={category} key={category}>
           {category}
@@ -37,7 +36,7 @@ class AddCards extends Component {
     }
     const categories = (
       <>
-      <label htmlFor="category"/>
+        <label htmlFor="category" />
         Category
         <select
           value={this.state.category}
@@ -54,7 +53,6 @@ class AddCards extends Component {
   };
 
   public onSubmit = (e: SyntheticEvent) => {
-    debugger;
     e.preventDefault();
     const { front, back, category } = this.state;
     const time = Date.now();
@@ -69,6 +67,7 @@ class AddCards extends Component {
     return (
       <form className="add-card" onSubmit={this.onSubmit}>
         {this.renderCategories()}
+
         <label htmlFor="front">Front:</label>
         <input
           type="text"
@@ -76,6 +75,8 @@ class AddCards extends Component {
           value={this.state.front}
           name="front"
         />
+        <TextToSpeech text={this.state.front} />
+
         <label htmlFor="back">Back:</label>
         <input
           type="text"
@@ -83,6 +84,8 @@ class AddCards extends Component {
           value={this.state.back}
           name="back"
         />
+        <TextToSpeech text={this.state.back} />
+
         <button onClick={this.onSubmit} type="submit">
           Submit
         </button>

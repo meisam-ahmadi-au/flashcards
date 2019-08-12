@@ -1,0 +1,13 @@
+.text-speech {
+  svg {
+    width: 30px;
+  }
+
+  &__play {
+    color: green;
+  }
+
+  &__stop {
+    color: red;
+  }
+}
