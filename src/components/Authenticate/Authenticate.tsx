@@ -5,11 +5,11 @@ import './Authenticate.scss';
 
 interface IAuthProps extends RouteComponentProps {
   setAuthenticate: (a: boolean) => void;
+  isAuthenticated: boolean;
 }
 
 class Authenticate extends Component<IAuthProps> {
   public state = {
-    isAuthenticated: false,
     isChecking: false,
     password: '',
     username: ''
@@ -19,10 +19,16 @@ class Authenticate extends Component<IAuthProps> {
     e.preventDefault();
     const { username, password } = this.state;
     if (username && password) {
-      Api.signin(username, password).then(data => {
-        this.props.setAuthenticate(true);
-        this.props.history.push('/addcard');
-      });
+      Api.signin(username, password)
+        .then(data => {
+          this.props.setAuthenticate(true);
+          this.props.history.push('/addcard');
+          this.setState({ password: '' });
+        })
+        .catch(err => {
+          this.props.setAuthenticate(false);
+          this.props.history.push('/');
+        });
     }
   };
 
@@ -31,38 +37,51 @@ class Authenticate extends Component<IAuthProps> {
     this.setState({ [name]: value });
   };
 
+  public onLogout = () => {
+    this.props.setAuthenticate(false);
+    this.props.history.push('/');
+  };
+
+  public renderLoginForm = () => (
+    <form onSubmit={this.authenticateUser} className="auth">
+      <label htmlFor="username">Username:</label>
+      <input
+        className="auth-input"
+        type="text"
+        name="username"
+        onChange={this.onInputChange}
+        value={this.state.username}
+      />
+      <label htmlFor="password">Password:</label>
+      <input
+        className="auth-input"
+        type="password"
+        name="password"
+        onChange={this.onInputChange}
+        value={this.state.password}
+      />
+      <button
+        className="auth-submit"
+        onClick={this.authenticateUser}
+      >
+        Login
+      </button>
+    </form>
+  );
+
+  public renderLogoutForm = () => (
+    <button onClick={this.onLogout}> Logout</button>
+  );
+
   public render() {
     return (
       <>
-        <form onSubmit={this.authenticateUser} className="auth">
-          <label htmlFor="username">Username:</label>
-          <input
-            className="auth-input"
-            type="text"
-            name="username"
-            onChange={this.onInputChange}
-            value={this.state.username}
-          />
-          <label htmlFor="password">Password:</label>
-          <input
-            className="auth-input"
-            type="password"
-            name="password"
-            onChange={this.onInputChange}
-            value={this.state.password}
-          />
-          <button
-            className="auth-submit"
-            onClick={this.authenticateUser}
-            type="submit"
-          >
-            Submit
-          </button>
-        </form>
+        {this.props.isAuthenticated
+          ? this.renderLogoutForm()
+          : this.renderLoginForm()}
       </>
     );
   }
 }
 
-// @ts-ignore
 export default withRouter(Authenticate);

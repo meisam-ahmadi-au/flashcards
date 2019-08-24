@@ -5,7 +5,7 @@ import './AddCard.scss';
 
 class AddCards extends Component {
   public state = {
-    categories: null || {},
+    categories: {},
     category: '',
     front: '',
     back: ''
@@ -27,8 +27,9 @@ class AddCards extends Component {
 
   public renderCategories = () => {
     let options = null;
-    if (this.state.categories) {
-      options = Object.keys(this.state.categories).map(category => (
+    const categoriesArray = Object.keys(this.state.categories);
+    if (categoriesArray.length) {
+      options = categoriesArray.map(category => (
         <option value={category} key={category}>
           {category}
         </option>

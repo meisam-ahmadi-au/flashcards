@@ -4,27 +4,27 @@ const KEY = process.env.REACT_APP_GKEY;
 const signinUrl = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=${KEY}`;
 const dbUrl = 'https://awesomeflashcard.firebaseio.com/users/';
 
-class flashcardApis {
+class FlashCardApis {
   public static signin = (email: string, password: string) =>
     Axios.post(signinUrl, { email, password, returnSecureToken: true }).then(
       res => {
-        flashcardApis.idToken = res.data.idToken;
-        flashcardApis.localId = res.data.localId;
+        FlashCardApis.idToken = res.data.idToken;
+        FlashCardApis.localId = res.data.localId;
         return res.data;
       }
     );
 
   public static getCategories = (refresh: boolean) => {
     const categoriesUrl = `${dbUrl}${
-      flashcardApis.localId
-    }/categories.json?auth=${flashcardApis.idToken}`;
-    if (!flashcardApis.categories || refresh) {
+      FlashCardApis.localId
+    }/categories.json?auth=${FlashCardApis.idToken}`;
+    if (!FlashCardApis.categories || refresh) {
       return Axios.get(categoriesUrl).then(res => {
-        flashcardApis.categories = res.data;
+        FlashCardApis.categories = res.data;
         return res.data;
       });
     } else {
-      return Promise.resolve(flashcardApis.categories);
+      return Promise.resolve(FlashCardApis.categories);
     }
   };
 
@@ -35,8 +35,8 @@ class flashcardApis {
     time: number
   ) => {
     const categoryUrl = `${dbUrl}${
-      flashcardApis.localId
-    }/${category}.json?auth=${flashcardApis.idToken}`;
+      FlashCardApis.localId
+    }/${category}.json?auth=${FlashCardApis.idToken}`;
     return Axios.post(categoryUrl, { front, back, time }).then(res => {
       console.log(res);
     });
@@ -47,4 +47,4 @@ class flashcardApis {
   private static categories: null | {};
 }
 
-export default flashcardApis;
+export default FlashCardApis;

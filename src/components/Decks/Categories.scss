@@ -1,0 +1,58 @@
+.decks {
+  position: relative;
+
+  &__svg {
+    position: absolute;
+    left: 20px;
+    padding: 20px;
+    width: 30px;
+    border-radius: 50%;
+    color: grey;
+    border: 3px solid grey;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  }
+
+  &-container {
+    width: 80%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-gap: 30px;
+  }
+}
+
+.deck {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+
+  &:hover {
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  }
+
+  &__image {
+    width: 100%;
+  }
+
+  &:hover &__icons {
+    color: grey;
+  }
+
+  &__icons {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    color: transparent;
+  }
+
+  &__svg {
+    width: 15px;
+    padding: 5px;
+    transition: transform 0.5s;
+
+    &:hover {
+      color: black;
+      transform: translateY(-3px);
+    }
+  }
+}

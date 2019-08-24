@@ -6,14 +6,14 @@
   border-bottom: 1px solid grey;
   padding: 20px;
 
-  &-menu {
+  &__menu {
     padding: 0;
     margin: 0;
     list-style: none;
     display: flex;
   }
 
-  &-item {
+  &__item {
     margin: 0 10px;
   }
 }
