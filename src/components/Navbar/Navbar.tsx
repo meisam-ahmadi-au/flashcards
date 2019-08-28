@@ -3,13 +3,10 @@ import { Link } from 'react-router-dom';
 import Authenticate from '../Authenticate/Authenticate';
 
 import './Navbar.scss';
-interface IProps {
-  setAuthenticate: (a: boolean) => void;
-  isAuthenticated: boolean;
-}
-const Navbar = (props: IProps) => {
+
+const Navbar = () => {
   return (
-    <div className="navbar">
+    <nav className="navbar">
       <ul className="navbar__menu">
         <li className="navbar__item">
           <Link to="/home">Home</Link>
@@ -19,11 +16,8 @@ const Navbar = (props: IProps) => {
         </li>
         <li className="navbar__item">Add Card</li>
       </ul>
-      <Authenticate
-        setAuthenticate={props.setAuthenticate}
-        isAuthenticated={props.isAuthenticated}
-      />
-    </div>
+      <Authenticate />
+    </nav>
   );
 };
 

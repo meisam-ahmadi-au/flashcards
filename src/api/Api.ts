@@ -15,9 +15,7 @@ class FlashCardApis {
     );
 
   public static getCategories = (refresh: boolean) => {
-    const categoriesUrl = `${dbUrl}${
-      FlashCardApis.localId
-    }/categories.json?auth=${FlashCardApis.idToken}`;
+    const categoriesUrl = `${dbUrl}${FlashCardApis.localId}/categories.json?auth=${FlashCardApis.idToken}`;
     if (!FlashCardApis.categories || refresh) {
       return Axios.get(categoriesUrl).then(res => {
         FlashCardApis.categories = res.data;
@@ -34,9 +32,7 @@ class FlashCardApis {
     back: string,
     time: number
   ) => {
-    const categoryUrl = `${dbUrl}${
-      FlashCardApis.localId
-    }/${category}.json?auth=${FlashCardApis.idToken}`;
+    const categoryUrl = `${dbUrl}${FlashCardApis.localId}/${category}.json?auth=${FlashCardApis.idToken}`;
     return Axios.post(categoryUrl, { front, back, time }).then(res => {
       console.log(res);
     });

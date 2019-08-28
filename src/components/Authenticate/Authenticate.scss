@@ -1,7 +1,7 @@
 .auth {
   white-space: nowrap;
 
-  &-input {
+  &__input {
     border: none;
     border-bottom: 1px solid grey;
     margin: 0 10px;
@@ -12,8 +12,21 @@
     }
   }
 
-  &-submit {
-    border: none;
-    padding: 5px;
+  &__button {
+    border: 3px solid transparent;
+    padding: 5px 35px;
+    margin: 0 5px;
+    transition: 0.5s border;
+
+    &:hover {
+      border: 3px solid rgba(202, 191, 191, 0.835);
+    }
+  }
+
+  &__logout {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    align-items: center;
+    grid-gap: 25px;
   }
 }

@@ -2,7 +2,8 @@
   position: relative;
 
   &__svg {
-    position: absolute;
+    cursor: pointer;
+    // position: absolute;
     left: 20px;
     padding: 20px;
     width: 30px;
@@ -12,12 +13,17 @@
     box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
   }
 
-  &-container {
+  &__container {
     width: 80%;
     margin: auto;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     grid-gap: 30px;
+  }
+
+  &__add-category {
+    display: flex;
+    align-items: center;
   }
 }
 
