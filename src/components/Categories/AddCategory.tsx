@@ -28,7 +28,7 @@ class AddCategory extends Component<IAddCategoryProps> {
           iconId="add"
           strokeWidth="0"
           title="Add a new category"
-          onClick={() => this.toggleAddCategoryForm()}
+          onClick={this.toggleAddCategoryForm}
         />
 
         {showAddCategoryForm && (

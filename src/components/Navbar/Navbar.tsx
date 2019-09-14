@@ -14,7 +14,9 @@ const Navbar = () => {
         <li className="navbar__item">
           <Link to="/categories">Categories</Link>
         </li>
-        <li className="navbar__item">Add Card</li>
+        <li className="navbar__item">
+          <Link to="/categories/">Add Card</Link>
+        </li>
       </ul>
       <Authenticate />
     </nav>

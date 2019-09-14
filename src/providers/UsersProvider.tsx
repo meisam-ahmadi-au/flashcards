@@ -1,7 +1,7 @@
 import { Unsubscribe as FirebaseUnsubscribe } from 'firebase';
 import React, { Component } from 'react';
 import { auth } from '../firebase/firebase';
-import { createUserProfile } from '../firebase/firebaseAuthenticate.js';
+import { createUserProfile } from '../firebase/firebaseAuthenticate';
 
 export const UsersContext = React.createContext(null);
 

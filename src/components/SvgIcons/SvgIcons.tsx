@@ -34,8 +34,8 @@ const SvgIcons = ({
     strokeWidth={strokeWidth}
   >
     <>
-    <title>{title}</title>
-    {icons[iconId].content}
+      <title>{title}</title>
+      {icons[iconId].content}
     </>
   </svg>
 );

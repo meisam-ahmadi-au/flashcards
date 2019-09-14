@@ -5,9 +5,20 @@ import AddCategory from './AddCategory';
 import './Categories.scss';
 import Category from './Category';
 
-class DecksContainer extends React.Component {
+interface ICategory {
+  totalNumberOfCards: number;
+  tags: string;
+  category: string;
+  categoryId: number;
+  createdAt: number;
+}
+
+interface IState {
+  categories: ICategory[];
+}
+class DecksContainer extends React.Component<{}, IState> {
   public state = {
-    categories: {}
+    categories: [] as ICategory[]
   };
 
   public async componentDidMount() {
@@ -15,22 +26,32 @@ class DecksContainer extends React.Component {
   }
 
   public getAllCategories = async () => {
-    const allCategories = await firestore
+    const categoriesCollection = await firestore
+      .doc(`otherInfo/${auth.currentUser!.uid}`)
       .collection(`categories`)
-      .doc(auth.currentUser!.uid)
       .get();
-    console.log('allCats', allCategories.data());
-    this.setState({ categories: { ...allCategories.data() } });
+    const allCategories = categoriesCollection.docs.map(doc =>
+      doc.data()
+    ) as ICategory[];
+
+    console.log('allCats', allCategories);
+    const allCategoriesSorted = allCategories.sort((catA, catB) => {
+      return catA.category > catB.category ? 1 : -1;
+    });
+    this.setState({ categories: [...allCategoriesSorted] });
   };
 
   public render() {
     const { categories } = this.state;
+    if (!categories) {
+      return;
+    }
     return (
       <div className="decks">
         <AddCategory getAllCategories={this.getAllCategories} />
         <div className="decks__container">
-          {Object.keys(categories).map(cat => (
-            <Category name={cat} key={cat} />
+          {categories.map(cat => (
+            <Category {...cat} key={cat.categoryId} />
           ))}
         </div>
       </div>

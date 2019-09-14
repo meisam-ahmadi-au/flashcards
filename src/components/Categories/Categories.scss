@@ -1,5 +1,6 @@
 .decks {
   position: relative;
+  cursor: pointer;
 
   &__svg {
     cursor: pointer;
@@ -17,13 +18,14 @@
     width: 80%;
     margin: auto;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     grid-gap: 30px;
   }
 
   &__add-category {
     display: flex;
     align-items: center;
+    margin-left: 20px;
   }
 }
 
@@ -40,13 +42,13 @@
     width: 100%;
   }
 
-  &:hover &__icons {
+  &:hover &__extras {
     color: grey;
   }
 
-  &__icons {
+  &__extras {
     position: absolute;
-    right: 0;
+    right: 10px;
     bottom: 0;
     color: transparent;
   }

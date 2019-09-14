@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { auth, firestore } from '../../firebase/firebase';
+import { functions } from '../../firebase/firebase';
 
 interface IAddCategoryInputProps {
   getAllCategories: () => void;
@@ -21,29 +21,13 @@ class AddCategoryInput extends Component<IAddCategoryInputProps> {
       return false;
     }
 
-    const categoryRef = await firestore.doc(
-      `categories/${auth.currentUser!.uid}`
-    );
-    const categorySnapshot = await categoryRef.get();
-    const categoryId = Date.now();
-
-    if (!categorySnapshot.get(category)) {
-      await categoryRef.set(
-        {
-          [Date.now()]: {
-            totalNumberOfCards: 0,
-            tags: '',
-            category,
-            categoryId
-          }
-        },
-        { merge: true }
-      );
-      this.setState({ category: '' });
-      this.props.getAllCategories();
-    } else {
-      console.log('category exists');
-    }
+    functions
+      .httpsCallable('addCategory')({ category })
+      .then(data => {
+        this.setState({ category: '' });
+        this.props.getAllCategories();
+      })
+      .catch(console.log);
   };
 
   public render() {

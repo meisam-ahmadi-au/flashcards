@@ -1,74 +1,68 @@
 import React, { Component, SyntheticEvent } from 'react';
-import Api from '../../api/Api';
+import { RouteComponentProps } from 'react-router';
+// import Api from '../../api/Api';
+import { firestore } from '../../firebase/firebase';
+import { UsersContext } from '../../providers/UsersProvider';
 import TextToSpeech from '../TextToSpeech/TextToSpeech';
 import './AddCard.scss';
 
-class AddCards extends Component {
+class AddCards extends Component<RouteComponentProps> {
   public state = {
-    categories: {},
-    category: '',
     front: '',
-    back: ''
+    back: '',
+    category: '',
+    totalNumberOfCards: 0,
+    categoryId: ''
   };
 
-  public componentDidMount() {
-    Api.getCategories(false).then(categories => this.setState({ categories }));
-  }
+  public componentDidMount = async () => {
+    const { category } = this.props.match.params as { category: string };
+    const user = this.context as firebase.User;
+
+    const categoriesRef = await firestore
+      .collection(`otherInfo/${user.uid}/categories`)
+      .where('category', '==', category.toLowerCase())
+      .get();
+
+    const categoriesSnapshot = categoriesRef.docs.map(doc => doc.data());
+    const { categoryId, totalNumberOfCards } = categoriesSnapshot[0];
+    console.log({ category, totalNumberOfCards, categoryId });
+    this.setState({ category, totalNumberOfCards, categoryId });
+  };
 
   public onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;
     this.setState({ [name]: value });
   };
 
-  public onSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = event.currentTarget;
-    this.setState({ [name]: value });
-  };
-
-  public renderCategories = () => {
-    let options = null;
-    const categoriesArray = Object.keys(this.state.categories);
-    if (categoriesArray.length) {
-      options = categoriesArray.map(category => (
-        <option value={category} key={category}>
-          {category}
-        </option>
-      ));
-    }
-    const categories = (
-      <>
-        <label htmlFor="category" />
-        Category
-        <select
-          value={this.state.category}
-          onChange={this.onSelectChange}
-          name="category"
-        >
-          <option value="">Select a category</option>
-          {options}
-        </select>
-      </>
-    );
-
-    return categories;
-  };
-
   public onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    const { front, back, category } = this.state;
-    const time = Date.now();
-    if (front && back && category) {
-      Api.addCard(category, front, back, time).then(data => {
-        this.setState({ front: '', back: '' });
-      });
+    const user = this.context as firebase.User;
+    const { front, back, categoryId } = this.state;
+
+    if (front && back && categoryId) {
+      const createdAt = Date.now();
+      firestore
+        .collection(`cards/${user.uid}/${categoryId}`)
+        .add({
+          front,
+          back,
+          createdAt,
+          nextReadTime: createdAt,
+          shouldReadFront: true,
+          learningCurve: [createdAt]
+        })
+        .then(data => {
+          this.setState({ front: '', back: '' });
+        })
+        .catch(console.log);
     }
   };
 
   public render() {
     return (
       <form className="add-card" onSubmit={this.onSubmit}>
-        {this.renderCategories()}
-
+        <h2>{`${this.state.category}[${this.state.totalNumberOfCards}]`}</h2>
         <label htmlFor="front">Front:</label>
         <input
           type="text"
@@ -95,4 +89,5 @@ class AddCards extends Component {
   }
 }
 
+AddCards.contextType = UsersContext;
 export default AddCards;
