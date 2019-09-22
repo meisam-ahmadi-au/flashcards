@@ -3,6 +3,7 @@ import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { signout } from '../../firebase/firebase';
 import { UsersContext } from '../../providers/UsersProvider';
+import SvgIcons from '../SvgIcons/SvgIcons';
 
 const Logout = (props: RouteComponentProps) => {
   const user: null | FirebaseUser = React.useContext(UsersContext);
@@ -16,9 +17,12 @@ const Logout = (props: RouteComponentProps) => {
   return (
     <div className="auth__logout">
       <h4>{`Hi ${displayName} !!!`}</h4>
-      <button onClick={onLogout} className="auth__button">
-        Logout
-      </button>
+      <SvgIcons
+        iconId="logout"
+        onClick={onLogout}
+        title="logout"
+        className="auth__logout--button"
+      />
     </div>
   );
 };

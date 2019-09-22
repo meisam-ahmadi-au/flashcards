@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { SyntheticEvent } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
-import flashcardImageSrc from '../../assets/flashcard.jpg';
+import flashcardImageSrc from '../../assets/flashcard.png';
 import SvgIcons from '../SvgIcons/SvgIcons';
+import styles from './Category.module.scss';
 
 interface IProps extends RouteComponentProps {
   totalNumberOfCards: number;
@@ -13,20 +14,46 @@ interface IProps extends RouteComponentProps {
 
 const Deck: React.FC<IProps> = props => {
   const { totalNumberOfCards, category, history } = props;
+
+  const goTo = (url: string) => (e: SyntheticEvent) => {
+    e.stopPropagation();
+    history.push(url);
+  };
+
+  const bgColor = Math.random()
+    .toString(16)
+    .substr(2, 6);
+
   return (
-    <div className="deck">
-      <img src={flashcardImageSrc} alt={category} className="deck__image" />
-      <h4 className="deck__name">{category}</h4>
-      <div className="deck__extras">
-        <span>{`${totalNumberOfCards} cards`}</span>
-        <SvgIcons className="deck__svg" iconId="edit" strokeWidth="0" />
+    <div
+      className={styles.deck}
+      title={category}
+      onClick={goTo(`/categories/${category}`)}
+    >
+      <img
+        style={{ background: `#${bgColor}` }}
+        src={flashcardImageSrc}
+        alt={category}
+        className={styles.deck__image}
+      />
+      <h4 className={styles.deck__name}>{category}</h4>
+      <div className={styles.deck__extras}>
+        <span
+          className={styles['deck__card-count']}
+        >{`${totalNumberOfCards} cards`}</span>
+        <SvgIcons className={styles.deck__svg} iconId="edit" strokeWidth="0" />
         <SvgIcons
-          className="deck__svg"
+          className={styles.deck__svg}
           iconId="add"
           strokeWidth="0"
-          onClick={() => history.push(`/categories/${category}/addcard`)}
+          onClick={goTo(`/categories/${category}/addcard`)}
         />
-        <SvgIcons className="deck__svg " iconId="delete" strokeWidth="0" />
+        <SvgIcons
+          className={styles.deck__svg}
+          iconId="delete"
+          strokeWidth="0"
+          title="delete"
+        />
       </div>
     </div>
   );

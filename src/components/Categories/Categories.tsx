@@ -1,5 +1,4 @@
 import React from 'react';
-// import Api from '../../api/Api';
 import { auth, firestore } from '../../firebase/firebase';
 import AddCategory from './AddCategory';
 import './Categories.scss';

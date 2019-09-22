@@ -25,8 +25,13 @@
 
   &__logout {
     display: grid;
-    grid-template-columns: repeat(2, max-content);
+    grid-template-columns: max-content 20px;
     align-items: center;
-    grid-gap: 25px;
+    grid-gap: 15px;
+
+    &--button {
+      fill: red;
+      stroke: red;
+    }
   }
 }
