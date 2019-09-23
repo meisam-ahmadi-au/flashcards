@@ -22,6 +22,7 @@
 
 # others
 /.gitignore_f
+key.json
 
 npm-debug.log*
 yarn-debug.log*

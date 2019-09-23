@@ -11,4 +11,4 @@ install:
   - npm i firebase-tools -g
 
 after_success:
-  - firebase deploy --token "$FIREBASE_TOKEN"
+  - firebase deploy --only hosting --token "$FIREBASE_TOKEN"
