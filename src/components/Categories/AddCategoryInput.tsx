@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { functions } from '../../firebase/firebase';
+import Portal from '../Portal/Portal';
+import Spinner from '../Spinner/Spinner';
 
 interface IAddCategoryInputProps {
   getAllCategories: () => void;
@@ -7,7 +9,8 @@ interface IAddCategoryInputProps {
 
 class AddCategoryInput extends Component<IAddCategoryInputProps> {
   public state = {
-    category: ''
+    category: '',
+    isLoading: false
   };
 
   public onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,18 +24,27 @@ class AddCategoryInput extends Component<IAddCategoryInputProps> {
       return false;
     }
 
+    this.setState({ isLoading: true });
     functions
       .httpsCallable('addCategory')({ category })
       .then(data => {
-        this.setState({ category: '' });
+        this.setState({ category: '', isLoading: false });
         this.props.getAllCategories();
       })
       .catch(console.log);
   };
 
   public render() {
+    const { isLoading } = this.state;
+
     return (
       <div>
+        {isLoading && (
+          <Portal>
+            <Spinner />
+          </Portal>
+        )}
+
         <input
           type="text"
           name="category"
@@ -40,7 +52,10 @@ class AddCategoryInput extends Component<IAddCategoryInputProps> {
           placeholder="New Category"
           onChange={this.onInputChange}
         />
-        <button onClick={this.onAddCategory}>Add Category</button>
+
+        <button onClick={this.onAddCategory} disabled={isLoading}>
+          Add Category
+        </button>
       </div>
     );
   }

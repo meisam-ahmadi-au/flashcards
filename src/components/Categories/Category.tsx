@@ -20,9 +20,11 @@ const Deck: React.FC<IProps> = props => {
     history.push(url);
   };
 
-  const bgColor = Math.random()
-    .toString(16)
-    .substr(2, 6);
+  const randomBackgroundColor = {
+    background: `#${Math.random()
+      .toString(16)
+      .substr(2, 6)}`
+  };
 
   return (
     <div
@@ -31,7 +33,7 @@ const Deck: React.FC<IProps> = props => {
       onClick={goTo(`/categories/${category}`)}
     >
       <img
-        style={{ background: `#${bgColor}` }}
+        style={randomBackgroundColor}
         src={flashcardImageSrc}
         alt={category}
         className={styles.deck__image}
