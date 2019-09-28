@@ -11,14 +11,20 @@ class UsersProvider extends Component {
   };
   public unsubscribeFromAuthentication: FirebaseUnsubscribe | null = null;
 
-  public componentDidMount = async () => {
+  public componentDidMount = () => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      this.setState({ user: JSON.parse(user) });
+    }
     this.unsubscribeFromAuthentication = auth.onAuthStateChanged(
       async userAuth => {
         console.log({ userAuth });
         if (!userAuth) {
+          localStorage.setItem('user', JSON.stringify(userAuth));
           return this.setState({ user: null });
         }
-
+        // return this.setState({ user: userAuth });
+        localStorage.setItem('user', JSON.stringify(userAuth));
         const userRef = await createUserProfile(userAuth);
         if (userRef) {
           userRef.onSnapshot(userSnapshot => {

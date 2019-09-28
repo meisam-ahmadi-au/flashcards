@@ -1,5 +1,6 @@
 import React from 'react';
-import { auth, firestore } from '../../firebase/firebase';
+import { firestore } from '../../firebase/firebase';
+import { UsersContext } from '../../providers/UsersProvider';
 import AddCategory from './AddCategory';
 import './Categories.scss';
 import Category from './Category';
@@ -25,8 +26,9 @@ class DecksContainer extends React.Component<{}, IState> {
   }
 
   public getAllCategories = async () => {
+    const { uid } = this.context;
     const categoriesCollection = await firestore
-      .doc(`otherInfo/${auth.currentUser!.uid}`)
+      .doc(`otherInfo/${uid}`)
       .collection(`categories`)
       .get();
     const allCategories = categoriesCollection.docs.map(doc =>
@@ -58,4 +60,5 @@ class DecksContainer extends React.Component<{}, IState> {
   }
 }
 
+DecksContainer.contextType = UsersContext;
 export default DecksContainer;

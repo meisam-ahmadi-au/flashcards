@@ -25,7 +25,7 @@ const App: React.FC = () => {
         </>
       ) : null}
       <Route path="/" exact={true} component={Home} />
-      <Redirect to="/" />
+      {/* <Redirect to="/" /> */}
     </div>
   );
 };
