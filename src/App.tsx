@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import './App.css';
 import AddCard from './components/AddCard/AddCard';
 import Cards from './components/Cards/Cards';
