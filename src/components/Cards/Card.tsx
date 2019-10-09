@@ -6,6 +6,7 @@ import {
   allIntervalsForDifferentQuality,
   IIntervalDeatilsWithQuality
 } from '../../util/superMemoII';
+import TextToSpeech from '../TextToSpeech/TextToSpeech';
 import styles from './Card.module.scss';
 
 interface ICardProps extends ICard {
@@ -46,10 +47,14 @@ const Card: React.FC<ICardProps> = props => {
     showBack ? ' ' : styles.hidden
   );
 
+  const [frontText, backText] = shouldReadFront ? [front, back] : [back, front];
   return (
     <div className={styles.card}>
       <div className={styles.card__content}>
-        <h4 className={frontClasses}>{shouldReadFront ? front : back}</h4>
+        <div className={frontClasses}>
+          <h4>{frontText}</h4>
+          <TextToSpeech text={frontText} />
+        </div>
         <div className={styles['card__image--container']}>
           <img
             className={styles.card__image}
@@ -57,7 +62,10 @@ const Card: React.FC<ICardProps> = props => {
             alt="awesome flashcards"
           />
         </div>
-        <h4 className={backClasses}>{shouldReadFront ? back : front}</h4>
+        <div className={backClasses}>
+          <h4>{backText}</h4>
+          <TextToSpeech text={backText} />
+        </div>
       </div>
 
       <button
