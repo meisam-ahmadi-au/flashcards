@@ -7,7 +7,7 @@ import {
   IIntervalDeatilsWithQuality
 } from '../../util/superMemoII';
 import TextToSpeech from '../TextToSpeech/TextToSpeech';
-import styles from './Card.module.scss';
+import styles from './ReviewCard.module.scss';
 
 interface ICardProps extends ICard {
   updateCard: (a: IIntervalDeatilsWithQuality) => void;

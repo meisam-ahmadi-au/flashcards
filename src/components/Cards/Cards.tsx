@@ -2,13 +2,11 @@ import moment from 'moment';
 import React, { Component } from 'react';
 import { RouteComponentProps } from 'react-router';
 import Api from '../../api/Api';
-import { firestore } from '../../firebase/firebase';
 import { UsersContext } from '../../providers/UsersProvider';
 import { ICard } from '../../util/interfaces';
 import { IIntervalDeatilsWithQuality } from '../../util/superMemoII';
 import Spinner from '../Spinner/Spinner';
-import Card from './Card';
-import styles from './Cards.module.scss';
+import ReviewCard from './ReviewCard';
 
 export class Cards extends Component<RouteComponentProps> {
   public state = {
@@ -22,10 +20,11 @@ export class Cards extends Component<RouteComponentProps> {
     const { uid } = this.context;
     const { category } = this.props.match.params as { category: string };
 
-    const { categoryId } = await Api.retreiveCategoryByCategoryName(
-      category,
-      uid
+    const { categoryId } = await Api.getCategoryDetailByCategoryName(
+      uid,
+      category
     );
+
     const cards = await Api.retreiveTodaysCardsByCategoryId(categoryId, uid);
 
     this.setState({
@@ -66,11 +65,9 @@ export class Cards extends Component<RouteComponentProps> {
     // if impossible
     if (quality === 0) {
       cards.unshift(activeCard);
-    } else {
-      await firestore
-        .doc(`cards/${uid}/${categoryId}/${activeCard.cardId}`)
-        .update(activeCard);
     }
+
+    await Api.updateCard(uid, categoryId)(activeCard);
 
     cards.pop();
     this.setState({ cards, activeCard: cards[cards.length - 1] });
@@ -80,11 +77,11 @@ export class Cards extends Component<RouteComponentProps> {
     const { isLoading, activeCard } = this.state;
 
     return (
-      <div className={styles.cards}>
+      <div>
         {isLoading ? (
           <Spinner />
         ) : activeCard ? (
-          <Card {...activeCard} updateCard={this.updateCardInterval} />
+          <ReviewCard {...activeCard} updateCard={this.updateCardInterval} />
         ) : (
           <h4>All reviewed! Well done!</h4>
         )}

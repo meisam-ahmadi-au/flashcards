@@ -23,7 +23,6 @@ class UsersProvider extends Component {
           localStorage.setItem('user', JSON.stringify(userAuth));
           return this.setState({ user: null });
         }
-        // return this.setState({ user: userAuth });
         localStorage.setItem('user', JSON.stringify(userAuth));
         const userRef = await createUserProfile(userAuth);
         if (userRef) {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { functions } from '../../firebase/firebase';
+import Api from '../../api/Api';
 import Portal from '../Portal/Portal';
 import Spinner from '../Spinner/Spinner';
 
@@ -25,13 +25,9 @@ class AddCategoryInput extends Component<IAddCategoryInputProps> {
     }
 
     this.setState({ isLoading: true });
-    functions
-      .httpsCallable('addCategory')({ category })
-      .then(data => {
-        this.setState({ category: '', isLoading: false });
-        this.props.getAllCategories();
-      })
-      .catch(console.log);
+    await Api.addCategory(category).catch(console.log);
+    this.setState({ category: '', isLoading: false });
+    this.props.getAllCategories();
   };
 
   public render() {

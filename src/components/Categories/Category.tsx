@@ -56,6 +56,14 @@ const Deck: React.FC<IProps> = props => {
           strokeWidth="0"
           title="delete"
         />
+        <SvgIcons
+          className={styles.deck__svg}
+          iconId="search"
+          title="search"
+          fill="none"
+          strokeWidth="60px"
+          onClick={goTo(`/categories/${category}/allcards`)}
+        />
       </div>
     </div>
   );

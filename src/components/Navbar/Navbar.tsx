@@ -9,13 +9,19 @@ const Navbar = () => {
     <nav className="navbar">
       <ul className="navbar__menu">
         <li className="navbar__item">
-          <Link to="/">Home</Link>
+          <Link className="navbar__link" to="/">
+            Home
+          </Link>
         </li>
         <li className="navbar__item">
-          <Link to="/categories">Categories</Link>
+          <Link className="navbar__link" to="/categories">
+            Categories
+          </Link>
         </li>
         <li className="navbar__item">
-          <Link to="/categories/">Add Card</Link>
+          <Link className="navbar__link" to="/categories/">
+            Add Card
+          </Link>
         </li>
       </ul>
       <Authenticate />

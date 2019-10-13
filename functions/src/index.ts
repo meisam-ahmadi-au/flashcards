@@ -3,19 +3,6 @@ import * as functions from 'firebase-functions';
 
 admin.initializeApp();
 const firestore = admin.firestore();
-console.log('Started...');
-
-// * Start writing Firebase Functions
-// TODO https://firebase.google.com/docs/functions/typescript
-
-export const helloWorld = functions.https.onRequest((request, response) => {
-  response.set('Access-Control-Allow-Origin', '*');
-  if (request.get('Authorization')) {
-    response.send('zeresh');
-  }
-  // respond.send(request.get('Authorization'));
-  response.send('Hello');
-});
 
 export const updateCardsCount = functions.firestore
   .document(`cards/{userId}/{categoryId}/{cardId}`)
@@ -67,3 +54,36 @@ export const addCategory = functions.https.onCall(
     }
   }
 );
+
+export const getAllCardsByCategoryName = functions.https.onCall(
+  async ({ category }, context) => {
+    const uid = context.auth!.uid;
+    const { categoryId } = await getCategoryDetailByCategoryName(uid, category);
+    const cardsRef = await firestore
+      .collection(`cards/${uid}/${categoryId}`)
+      .get();
+
+    const allCards = cardsRef.docs.map(doc => ({
+      ...doc.data(),
+      cardId: doc.id
+    }));
+
+    return {
+      allCards,
+      isSucceessful: true
+    };
+  }
+);
+
+const getCategoryDetailByCategoryName = async (
+  uid: string,
+  category: string
+) => {
+  const categoriesRef = await firestore
+    .collection(`otherInfo/${uid}/categories`)
+    .where('category', '==', category.toLowerCase())
+    .get();
+
+  const categoriesSnapshot = categoriesRef.docs.map(doc => doc.data());
+  return { ...categoriesSnapshot[0] };
+};

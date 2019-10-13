@@ -1,7 +1,6 @@
 import React, { Component, SyntheticEvent } from 'react';
 import { RouteComponentProps } from 'react-router';
-// import Api from '../../api/Api';
-import { firestore } from '../../firebase/firebase';
+import Api from '../../api/Api';
 import { UsersContext } from '../../providers/UsersProvider';
 import TextToSpeech from '../TextToSpeech/TextToSpeech';
 import './AddCard.scss';
@@ -18,15 +17,10 @@ class AddCards extends Component<RouteComponentProps> {
   public componentDidMount = async () => {
     const { category } = this.props.match.params as { category: string };
     const user = this.context as firebase.User;
-
-    const categoriesRef = await firestore
-      .collection(`otherInfo/${user.uid}/categories`)
-      .where('category', '==', category.toLowerCase())
-      .get();
-
-    const categoriesSnapshot = categoriesRef.docs.map(doc => doc.data());
-    const { categoryId, totalNumberOfCards } = categoriesSnapshot[0];
-    console.log({ category, totalNumberOfCards, categoryId });
+    const {
+      categoryId,
+      totalNumberOfCards
+    } = await Api.getCategoryDetailByCategoryName(user.uid, category);
     this.setState({ category, totalNumberOfCards, categoryId });
   };
 
@@ -35,27 +29,24 @@ class AddCards extends Component<RouteComponentProps> {
     this.setState({ [name]: value });
   };
 
-  public onSubmit = (e: SyntheticEvent) => {
+  public onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     const user = this.context as firebase.User;
     const { front, back, categoryId } = this.state;
 
     if (front && back && categoryId) {
       const createdAt = Date.now();
-      firestore
-        .collection(`cards/${user.uid}/${categoryId}`)
-        .add({
-          front,
-          back,
-          createdAt,
-          nextReadTime: createdAt,
-          shouldReadFront: true,
-          learningCurve: [createdAt]
-        })
-        .then(data => {
-          this.setState({ front: '', back: '' });
-        })
-        .catch(console.log);
+      const newCard = {
+        front,
+        back,
+        createdAt,
+        nextReadTime: createdAt,
+        shouldReadFront: true,
+        learningCurve: [createdAt]
+      };
+
+      await Api.addCard(user.uid, categoryId)(newCard).catch(console.log);
+      this.setState({ front: '', back: '' });
     }
   };
 

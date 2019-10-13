@@ -6,6 +6,8 @@
   margin-bottom: 20px;
   border-bottom: 1px solid grey;
   padding: 20px;
+  background: #2b3648;
+  color: white;
 
   &__menu {
     padding: 0;
@@ -16,5 +18,11 @@
 
   &__item {
     margin: 0 10px;
+  }
+
+  &__link {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
   }
 }

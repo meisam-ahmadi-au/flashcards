@@ -17,10 +17,8 @@
   &__back {
     min-height: 175px;
     color: #fefefe;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-flow: column;
+    display: grid;
+    grid-template-rows: 1fr min-content;
     padding: 0 20px;
   }
 

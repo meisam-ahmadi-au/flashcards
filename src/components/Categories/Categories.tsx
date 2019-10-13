@@ -1,17 +1,10 @@
 import React from 'react';
-import { firestore } from '../../firebase/firebase';
+import Api from '../../api/Api';
 import { UsersContext } from '../../providers/UsersProvider';
+import { ICategory } from '../../util/interfaces';
 import AddCategory from './AddCategory';
 import './Categories.scss';
 import Category from './Category';
-
-interface ICategory {
-  totalNumberOfCards: number;
-  tags: string;
-  category: string;
-  categoryId: number;
-  createdAt: number;
-}
 
 interface IState {
   categories: ICategory[];
@@ -27,19 +20,8 @@ class DecksContainer extends React.Component<{}, IState> {
 
   public getAllCategories = async () => {
     const { uid } = this.context;
-    const categoriesCollection = await firestore
-      .doc(`otherInfo/${uid}`)
-      .collection(`categories`)
-      .get();
-    const allCategories = categoriesCollection.docs.map(doc =>
-      doc.data()
-    ) as ICategory[];
-
-    console.log('allCats', allCategories);
-    const allCategoriesSorted = allCategories.sort((catA, catB) => {
-      return catA.category > catB.category ? 1 : -1;
-    });
-    this.setState({ categories: [...allCategoriesSorted] });
+    const allCategoriesSorted = await Api.getAllCategories(uid);
+    this.setState({ categories: [...allCategoriesSorted!] });
   };
 
   public render() {

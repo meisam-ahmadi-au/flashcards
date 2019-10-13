@@ -1,25 +1,8 @@
-import Axios from 'axios';
 import moment from 'moment';
-import { firestore } from '../firebase/firebase';
-
-const KEY = process.env.REACT_APP_GKEY;
-const signinUrl = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=${KEY}`;
-const dbUrl = 'https://awesomeflashcard.firebaseio.com/users/';
+import { firestore, functions } from '../firebase/firebase';
+import { ICard, ICategory, INewCard } from '../util/interfaces';
 
 class FlashCardApis {
-  public static retreiveCategoryByCategoryName = async (
-    categoryName: string,
-    uid: string
-  ) => {
-    const categoryRef = await firestore
-      .collection(`otherInfo/${uid}/categories`)
-      .where('category', '==', categoryName.toLowerCase())
-      .get();
-
-    const categorySnapshot = categoryRef.docs.map(doc => doc.data());
-    return { ...categorySnapshot[0] };
-  };
-
   public static retreiveTodaysCardsByCategoryId = async (
     categoryId: string,
     uid: string
@@ -42,42 +25,64 @@ class FlashCardApis {
     return [...cardsSnapshot];
   };
 
-  public static signin = (email: string, password: string) =>
-    Axios.post(signinUrl, { email, password, returnSecureToken: true }).then(
-      res => {
-        FlashCardApis.idToken = res.data.idToken;
-        FlashCardApis.localId = res.data.localId;
-        return res.data;
-      }
-    );
-
-  public static getCategories = (refresh: boolean) => {
-    const categoriesUrl = `${dbUrl}${FlashCardApis.localId}/categories.json?auth=${FlashCardApis.idToken}`;
-    if (!FlashCardApis.categories || refresh) {
-      return Axios.get(categoriesUrl).then(res => {
-        FlashCardApis.categories = res.data;
-        return res.data;
-      });
-    } else {
-      return Promise.resolve(FlashCardApis.categories);
-    }
-  };
-
-  public static addCard = (
-    category: string,
-    front: string,
-    back: string,
-    time: number
+  public static getCategoryDetailByCategoryName = async (
+    uid: string,
+    category: string
   ) => {
-    const categoryUrl = `${dbUrl}${FlashCardApis.localId}/${category}.json?auth=${FlashCardApis.idToken}`;
-    return Axios.post(categoryUrl, { front, back, time }).then(res => {
-      console.log(res);
-    });
+    const categoriesRef = await firestore
+      .collection(`otherInfo/${uid}/categories`)
+      .where('category', '==', category.toLowerCase())
+      .get();
+
+    const categoriesSnapshot = categoriesRef.docs.map(doc => doc.data());
+    return { ...categoriesSnapshot[0] };
   };
 
-  private static idToken = '';
-  private static localId = '';
-  private static categories: null | {};
+  public static addCard = (uid: string, categoryId: string) => async (
+    card: INewCard
+  ) => await firestore.collection(`cards/${uid}/${categoryId}`).add(card);
+
+  public static updateCard = (uid: string, categoryId: string) => async (
+    activeCard: ICard
+  ) =>
+    await firestore
+      .doc(`cards/${uid}/${categoryId}/${activeCard.cardId}`)
+      .update(activeCard);
+
+  public static getAllCategories = async (uid: string) => {
+    const categoriesCollection = await firestore
+      .doc(`otherInfo/${uid}`)
+      .collection(`categories`)
+      .get()
+      .catch(console.log);
+
+    if (!categoriesCollection) {
+      return;
+    }
+    const allCategories = categoriesCollection.docs.map(doc =>
+      doc.data()
+    ) as ICategory[];
+
+    const allCategoriesSorted = allCategories.sort((catA, catB) => {
+      return catA.category > catB.category ? 1 : -1;
+    });
+
+    return allCategoriesSorted;
+  };
+
+  public static getAllCardsInCategory = async (
+    uid: string,
+    category: string
+  ) => {
+    const { data } = await functions.httpsCallable('getAllCardsByCategoryName')(
+      { category }
+    );
+    const { allCards } = data;
+    return [...allCards];
+  };
+
+  public static addCategory = async (category: string) =>
+    await functions.httpsCallable('addCategory')({ category });
 }
 
 export default FlashCardApis;
