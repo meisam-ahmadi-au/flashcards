@@ -19,14 +19,14 @@ const AllCards: React.FC<RouteComponentProps> = props => {
     setKeyword(value.trim());
   };
 
-  const filteredCards = (allCards: ICard[], keyword: string) => {
-    if (!keyword) {
-      return allCards;
+  const filteredCards = (cards: ICard[], searchTerm: string) => {
+    if (!searchTerm) {
+      return cards;
     } else {
-      return allCards.filter(
+      return cards.filter(
         card =>
-          card.front.toLowerCase().includes(keyword.toLowerCase()) ||
-          card.back.toLowerCase().includes(keyword.toLowerCase())
+          card.front.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          card.back.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
   };
@@ -37,6 +37,7 @@ const AllCards: React.FC<RouteComponentProps> = props => {
         user.uid,
         category
       );
+      console.log({ allCardsInCategory });
       setAllCards(allCardsInCategory);
     })();
   }, [user, category]);
@@ -54,7 +55,7 @@ const AllCards: React.FC<RouteComponentProps> = props => {
       />
 
       {filteredCards(allCards, keyword).map(card => (
-        <Card key={card.cardId} {...card} />
+        <Card key={card.cardId} {...card} category={category} />
       ))}
     </div>
   );

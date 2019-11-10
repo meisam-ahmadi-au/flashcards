@@ -4,7 +4,7 @@ import * as functions from 'firebase-functions';
 admin.initializeApp();
 const firestore = admin.firestore();
 
-export const updateCardsCount = functions.firestore
+export const updateCardsCountOnCreate = functions.firestore
   .document(`cards/{userId}/{categoryId}/{cardId}`)
   .onCreate(async (snapshot, context) => {
     const { userId, categoryId } = context.params;
@@ -14,6 +14,19 @@ export const updateCardsCount = functions.firestore
 
     return otherInfoRef.update({
       totalNumberOfCards: admin.firestore.FieldValue.increment(1)
+    });
+  });
+
+export const updateCardsCountOnDelete = functions.firestore
+  .document(`cards/{userId}/{categoryId}/{cardId}`)
+  .onDelete(async (snapshot, context) => {
+    const { userId, categoryId } = context.params;
+    const otherInfoRef = firestore.doc(
+      `otherInfo/${userId}/categories/${categoryId}`
+    );
+
+    return otherInfoRef.update({
+      totalNumberOfCards: admin.firestore.FieldValue.increment(-1)
     });
   });
 
@@ -72,6 +85,24 @@ export const getAllCardsByCategoryName = functions.https.onCall(
       allCards,
       isSucceessful: true
     };
+  }
+);
+export const deteleCard = functions.https.onCall(
+  async ({ category, cardId }, context) => {
+    const uid = context.auth!.uid;
+    const { categoryId } = await getCategoryDetailByCategoryName(uid, category);
+    return firestore
+      .collection(`cards/${uid}/${categoryId}`)
+      .doc(cardId)
+      .delete()
+      .then(() => ({ isSucceessful: true }))
+      .catch(
+        error =>
+          new functions.https.HttpsError('unknown', 'failed', {
+            isSucceessful: false,
+            reason: error
+          })
+      );
   }
 );
 

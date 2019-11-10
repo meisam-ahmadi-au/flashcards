@@ -1,12 +1,26 @@
 import React from 'react';
+import classNames from '../../util/classNames';
 import styles from './Spinner.module.scss';
 
-const Spinner = () => {
+const Spinner: React.FC<{ style?: string }> = ({ style }) => {
+  const spinnerClassName = classNames(
+    styles['lds-spinner'],
+    style ? styles[style] : ''
+  );
   return (
-    <div className={styles.loader}>
-      <div className={`${styles.inner} ${styles.one}`} />
-      <div className={`${styles.inner} ${styles.two}`} />
-      <div className={`${styles.inner} ${styles.three}`} />
+    <div className={spinnerClassName}>
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
     </div>
   );
 };

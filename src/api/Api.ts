@@ -63,9 +63,9 @@ class FlashCardApis {
       doc.data()
     ) as ICategory[];
 
-    const allCategoriesSorted = allCategories.sort((catA, catB) => {
-      return catA.category > catB.category ? 1 : -1;
-    });
+    const allCategoriesSorted = allCategories.sort((catA, catB) =>
+      catA.category > catB.category ? 1 : -1
+    );
 
     return allCategoriesSorted;
   };
@@ -83,6 +83,9 @@ class FlashCardApis {
 
   public static addCategory = async (category: string) =>
     await functions.httpsCallable('addCategory')({ category });
+
+  public static deleteCard = async (category: string, cardId: string) =>
+    functions.httpsCallable('deteleCard')({ category, cardId });
 }
 
 export default FlashCardApis;

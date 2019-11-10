@@ -1,0 +1,51 @@
+.home-image {
+  position: relative;
+  display: inline-block;
+  &__icons {
+    width: 50px;
+    padding: 5px;
+    border-radius: 50%;
+    position: absolute;
+    animation: popup 0.3s cubic-bezier(0.15, 0.77, 0.69, 1.49) both;
+
+    &:first-of-type {
+      // its the big image
+      background: transparent;
+    }
+
+    &:nth-of-type(2) {
+      left: 26.6%;
+      top: 16%;
+    }
+
+    &:nth-of-type(3) {
+      left: 36%;
+      top: 10%;
+      animation-delay: 0.4s;
+    }
+
+    &:nth-of-type(4) {
+      left: 35%;
+      top: 25%;
+      animation-delay: 0.8s;
+    }
+
+    &:nth-of-type(5) {
+      left: 44%;
+      top: 19%;
+      animation-delay: 1.2s;
+    }
+  }
+}
+
+@keyframes popup {
+  0% {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

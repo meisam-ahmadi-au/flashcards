@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Api from '../../api/Api';
-import Portal from '../Portal/Portal';
+import { Modal } from '../Portal/Portal';
 import Spinner from '../Spinner/Spinner';
 
 interface IAddCategoryInputProps {
@@ -36,9 +36,9 @@ class AddCategoryInput extends Component<IAddCategoryInputProps> {
     return (
       <div>
         {isLoading && (
-          <Portal>
+          <Modal>
             <Spinner />
-          </Portal>
+          </Modal>
         )}
 
         <input

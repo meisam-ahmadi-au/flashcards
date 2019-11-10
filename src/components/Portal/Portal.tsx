@@ -3,11 +3,11 @@ import ReactDOM from 'react-dom';
 import styles from './Portal.module.scss';
 
 const modalRoot = document.getElementById('portal')!;
-export class Portal extends React.Component {
+export class PortalContainer extends React.Component {
   public el = document.createElement('div');
 
   public componentDidMount() {
-    this.el.classList.add(styles.portal);
+    // this.el.classList.add(styles.portal);
     modalRoot.appendChild(this.el);
   }
 
@@ -20,4 +20,24 @@ export class Portal extends React.Component {
   }
 }
 
-export default Portal;
+export const Modal: React.FC<{ onClick?: () => void }> = ({
+  children,
+  onClick
+}) => {
+  return (
+    <PortalContainer>
+      <div className={styles.portal} onClick={onClick}>
+        {children}
+      </div>
+    </PortalContainer>
+  );
+};
+
+// export const Notification = () => {
+//   return (
+//     <div>
+
+//     </div>
+//   )
+// }
+

@@ -1,6 +1,7 @@
 import React, { SyntheticEvent } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import flashcardImageSrc from '../../assets/flashcard.png';
+import { randomBackgroundColor } from '../../util/helpers';
 import SvgIcons from '../SvgIcons/SvgIcons';
 import styles from './Category.module.scss';
 
@@ -20,12 +21,6 @@ const Deck: React.FC<IProps> = props => {
     history.push(url);
   };
 
-  const randomBackgroundColor = {
-    background: `#${Math.random()
-      .toString(16)
-      .substr(2, 6)}`
-  };
-
   return (
     <div
       className={styles.deck}
@@ -33,7 +28,7 @@ const Deck: React.FC<IProps> = props => {
       onClick={goTo(`/categories/${category}`)}
     >
       <img
-        style={randomBackgroundColor}
+        style={randomBackgroundColor()}
         src={flashcardImageSrc}
         alt={category}
         className={styles.deck__image}
@@ -43,25 +38,31 @@ const Deck: React.FC<IProps> = props => {
         <span
           className={styles['deck__card-count']}
         >{`${totalNumberOfCards} cards`}</span>
-        <SvgIcons className={styles.deck__svg} iconId="edit" strokeWidth="0" />
+        <SvgIcons
+          className={styles.deck__svg}
+          iconId="edit"
+          strokeWidth="0"
+          title="edit"
+        />
+
         <SvgIcons
           className={styles.deck__svg}
           iconId="add"
           strokeWidth="0"
           onClick={goTo(`/categories/${category}/addcard`)}
         />
+
         <SvgIcons
           className={styles.deck__svg}
           iconId="delete"
           strokeWidth="0"
           title="delete"
         />
+
         <SvgIcons
           className={styles.deck__svg}
           iconId="search"
           title="search"
-          fill="none"
-          strokeWidth="60px"
           onClick={goTo(`/categories/${category}/allcards`)}
         />
       </div>

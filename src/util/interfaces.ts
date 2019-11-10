@@ -1,3 +1,5 @@
+import { RouteComponentProps } from 'react-router';
+
 export interface INewCard {
   front: string;
   back: string;
@@ -12,6 +14,7 @@ export interface ICard extends INewCard {
   interval: number;
   easeFactor: number;
   cardId?: string;
+  category?: string;
 }
 
 export interface ICategory {
@@ -20,4 +23,10 @@ export interface ICategory {
   category: string;
   categoryId: number;
   createdAt: number;
+}
+
+export interface IDeleteCard {
+  cardId: string;
+  category: string;
+  onCancel: () => void;
 }

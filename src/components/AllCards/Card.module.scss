@@ -1,15 +1,44 @@
 .card {
-  padding: 25px;
+  padding: 25px 0;
   display: grid;
   grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr 25px;
   min-height: 50px;
   border-radius: 15px;
   box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
-  transition: transform 0.5s;
   background: white;
 
-  &:hover {
-    transform: translateY(-10px);
+  &__tools {
+    grid-column: 2;
+    grid-row: 1/2;
+    display: grid;
+    grid-template-columns: 15px;
+    grid-template-rows: repeat(3, 15px);
+    gap: 10px;
     cursor: pointer;
+    transition: opacity, transform 0.5s, 0.5s;
+    transform: translateX(15px);
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  &:hover > &__tools {
+    visibility: visible;
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  &__side {
+    padding: 0 25px;
+  }
+
+  &__svg {
+    transition: transform 0.5s;
+    color: grey;
+
+    &:hover {
+      color: black;
+      transform: translateX(-5px);
+    }
   }
 }
