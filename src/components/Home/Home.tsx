@@ -1,5 +1,4 @@
 import React from 'react';
-import Styles from './Home.module.scss';
 import HomeImageAnimated from './HomeImageAnimated';
 
 const Home = () => {

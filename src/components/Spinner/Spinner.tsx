@@ -2,10 +2,10 @@ import React from 'react';
 import classNames from '../../util/classNames';
 import styles from './Spinner.module.scss';
 
-const Spinner: React.FC<{ style?: string }> = ({ style }) => {
+const Spinner: React.FC<{ stylex?: string }> = ({ stylex }) => {
   const spinnerClassName = classNames(
     styles['lds-spinner'],
-    style ? styles[style] : ''
+    stylex ? styles[stylex] : ''
   );
   return (
     <div className={spinnerClassName}>

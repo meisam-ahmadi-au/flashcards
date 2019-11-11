@@ -7,7 +7,6 @@ import DeleteCard from './DeleteCard';
 
 const Card: React.FC<ICard> = ({ front, back, cardId, category }) => {
   const [showPortal, setShowPortal] = React.useState('');
-  const [hasSpinner, setHasSpinner] = React.useState(false);
   const cancelModal = () => setShowPortal('');
   return (
     <div className={Styles.card}>

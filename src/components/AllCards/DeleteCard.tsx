@@ -30,7 +30,7 @@ const DeleteCard: React.FC<IDeleteCard> = ({ category, cardId, onCancel }) => {
       </button>
       {hasSpinner ? (
         <div className={Styles['delete-card__spinner']}>
-          <Spinner style="absolute" />
+          <Spinner stylex="absolute" />
         </div>
       ) : null}
     </div>
