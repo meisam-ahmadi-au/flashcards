@@ -5,7 +5,13 @@ import SvgIcons from '../SvgIcons/SvgIcons';
 import Styles from './Card.module.scss';
 import DeleteCard from './DeleteCard';
 
-const Card: React.FC<ICard> = ({ front, back, cardId, category }) => {
+const Card: React.FC<ICard> = ({
+  front,
+  back,
+  cardId,
+  category,
+  deleteCard
+}) => {
   const [showPortal, setShowPortal] = React.useState('');
   const cancelModal = () => setShowPortal('');
   return (
@@ -16,6 +22,7 @@ const Card: React.FC<ICard> = ({ front, back, cardId, category }) => {
             cardId={cardId!}
             category={category!}
             onCancel={cancelModal}
+            deleteCard={deleteCard}
           />
         </Modal>
       ) : showPortal === 'move' ? (

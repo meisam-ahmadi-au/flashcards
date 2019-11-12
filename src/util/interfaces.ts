@@ -15,6 +15,7 @@ export interface ICard extends INewCard {
   easeFactor: number;
   cardId?: string;
   category?: string;
+  deleteCard: (a: string) => void;
 }
 
 export interface ICategory {
@@ -29,4 +30,5 @@ export interface IDeleteCard {
   cardId: string;
   category: string;
   onCancel: () => void;
+  deleteCard: (a: string) => void;
 }

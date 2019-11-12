@@ -31,6 +31,11 @@ const AllCards: React.FC<RouteComponentProps> = props => {
     }
   };
 
+  const deleteCard = (cardId: string) => {
+    const newCards = allCards.filter(card => card.cardId !== cardId);
+    setAllCards(newCards);
+  };
+
   React.useEffect(() => {
     (async () => {
       const allCardsInCategory = await Api.getAllCardsInCategory(
@@ -55,7 +60,12 @@ const AllCards: React.FC<RouteComponentProps> = props => {
       />
 
       {filteredCards(allCards, keyword).map(card => (
-        <Card key={card.cardId} {...card} category={category} />
+        <Card
+          key={card.cardId}
+          {...card}
+          category={category}
+          deleteCard={deleteCard}
+        />
       ))}
     </div>
   );

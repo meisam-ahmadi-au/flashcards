@@ -4,7 +4,12 @@ import { IDeleteCard } from '../../util/interfaces';
 import Spinner from '../Spinner/Spinner';
 import Styles from './DeleteCard.module.scss';
 
-const DeleteCard: React.FC<IDeleteCard> = ({ category, cardId, onCancel }) => {
+const DeleteCard: React.FC<IDeleteCard> = ({
+  category,
+  cardId,
+  onCancel,
+  deleteCard
+}) => {
   const [hasSpinner, setHasSpinner] = React.useState(false);
 
   const stopPropagation = (e: SyntheticEvent) => {
@@ -14,8 +19,8 @@ const DeleteCard: React.FC<IDeleteCard> = ({ category, cardId, onCancel }) => {
   const deleteHandler = async () => {
     setHasSpinner(true);
     await Api.deleteCard(category!, cardId!);
+    deleteCard(cardId);
     setHasSpinner(false);
-    // history.push('/');
     onCancel();
   };
 
