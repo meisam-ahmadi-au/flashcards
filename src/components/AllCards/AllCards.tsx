@@ -3,7 +3,7 @@ import React from 'react';
 import { RouteComponentProps } from 'react-router';
 import Api from '../../api/Api';
 import { UsersContext } from '../../providers/UsersProvider';
-import { ICard } from '../../util/interfaces';
+import { ICard, IUpdateCard } from '../../util/interfaces';
 import Styles from './AllCards.module.scss';
 import Card from './Card';
 
@@ -36,6 +36,20 @@ const AllCards: React.FC<RouteComponentProps> = props => {
     setAllCards(newCards);
   };
 
+  const updateCard = (updatedCard: IUpdateCard) => {
+    const newCards = allCards.map(card => {
+      if (card.cardId === updatedCard.cardId) {
+        return {
+          ...card,
+          ...updatedCard
+        };
+      } else {
+        return card;
+      }
+    });
+    setAllCards(newCards);
+  };
+
   React.useEffect(() => {
     (async () => {
       const allCardsInCategory = await Api.getAllCardsInCategory(
@@ -65,6 +79,7 @@ const AllCards: React.FC<RouteComponentProps> = props => {
           {...card}
           category={category}
           deleteCard={deleteCard}
+          updateCard={updateCard}
         />
       ))}
     </div>

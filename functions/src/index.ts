@@ -78,6 +78,7 @@ export const getAllCardsByCategoryName = functions.https.onCall(
 
     const allCards = cardsRef.docs.map(doc => ({
       ...doc.data(),
+      categoryId,
       cardId: doc.id
     }));
 

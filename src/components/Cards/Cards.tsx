@@ -45,6 +45,7 @@ export class Cards extends Component<RouteComponentProps> {
     const { uid } = this.context;
     const activeCard = {
       ...this.state.activeCard,
+      cardId: this.state.activeCard.cardId!,
       interval,
       easeFactor,
       repetitions

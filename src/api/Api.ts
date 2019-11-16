@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { firestore, functions } from '../firebase/firebase';
-import { ICard, ICategory, INewCard } from '../util/interfaces';
+import { ICategory, INewCard, IUpdateCard } from '../util/interfaces';
 
 class FlashCardApis {
   public static retreiveTodaysCardsByCategoryId = async (
@@ -43,11 +43,11 @@ class FlashCardApis {
   ) => await firestore.collection(`cards/${uid}/${categoryId}`).add(card);
 
   public static updateCard = (uid: string, categoryId: string) => async (
-    activeCard: ICard
+    updatedCard: IUpdateCard
   ) =>
     await firestore
-      .doc(`cards/${uid}/${categoryId}/${activeCard.cardId}`)
-      .update(activeCard);
+      .doc(`cards/${uid}/${categoryId}/${updatedCard.cardId}`)
+      .update(updatedCard);
 
   public static getAllCategories = async (uid: string) => {
     const categoriesCollection = await firestore

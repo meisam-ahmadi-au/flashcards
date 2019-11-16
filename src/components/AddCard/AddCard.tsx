@@ -2,8 +2,7 @@ import React, { Component, SyntheticEvent } from 'react';
 import { RouteComponentProps } from 'react-router';
 import Api from '../../api/Api';
 import { UsersContext } from '../../providers/UsersProvider';
-import TextToSpeech from '../TextToSpeech/TextToSpeech';
-import './AddCard.scss';
+import AddOrUpdate from './AddOrUpdate';
 
 class AddCards extends Component<RouteComponentProps> {
   public state = {
@@ -29,7 +28,7 @@ class AddCards extends Component<RouteComponentProps> {
     this.setState({ [name]: value });
   };
 
-  public onSubmit = async (e: SyntheticEvent) => {
+  public addCard = async (e: SyntheticEvent) => {
     e.preventDefault();
     const user = this.context as firebase.User;
     const { front, back, categoryId } = this.state;
@@ -50,32 +49,20 @@ class AddCards extends Component<RouteComponentProps> {
     }
   };
 
+  public goBack = () => {
+    this.props.history.goBack();
+  };
+
   public render() {
+    const { category, totalNumberOfCards, front, back } = this.state;
+    const addProps = { category, totalNumberOfCards, front, back };
     return (
-      <form className="add-card" onSubmit={this.onSubmit}>
-        <h2>{`${this.state.category}[${this.state.totalNumberOfCards}]`}</h2>
-        <label htmlFor="front">Front:</label>
-        <input
-          type="text"
-          onChange={this.onInputChange}
-          value={this.state.front}
-          name="front"
-        />
-        <TextToSpeech text={this.state.front} />
-
-        <label htmlFor="back">Back:</label>
-        <input
-          type="text"
-          onChange={this.onInputChange}
-          value={this.state.back}
-          name="back"
-        />
-        <TextToSpeech text={this.state.back} />
-
-        <button onClick={this.onSubmit} type="submit">
-          Submit
-        </button>
-      </form>
+      <AddOrUpdate
+        {...addProps}
+        onSubmit={this.addCard}
+        onCancel={this.goBack}
+        onInputChange={this.onInputChange}
+      />
     );
   }
 }

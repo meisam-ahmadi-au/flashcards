@@ -1,7 +1,7 @@
 import React from 'react';
 import flashcardImageSrc from '../../assets/flashcard.png';
 import classNames from '../../util/classNames';
-import { ICard } from '../../util/interfaces';
+import { IReviewCard } from '../../util/interfaces';
 import {
   allIntervalsForDifferentQuality,
   IIntervalDeatilsWithQuality
@@ -9,11 +9,7 @@ import {
 import TextToSpeech from '../TextToSpeech/TextToSpeech';
 import styles from './ReviewCard.module.scss';
 
-interface ICardProps extends ICard {
-  updateCard: (a: IIntervalDeatilsWithQuality) => void;
-}
-
-const Card: React.FC<ICardProps> = props => {
+const Card: React.FC<IReviewCard> = props => {
   const {
     repetitions,
     interval,
