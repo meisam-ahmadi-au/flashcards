@@ -71,6 +71,7 @@ const AllCards: React.FC<RouteComponentProps> = props => {
         className={Styles['all-cards__search']}
         type="text"
         onChange={changeHandler}
+        placeholder="Search"
       />
 
       {filteredCards(allCards, keyword).map(card => (
