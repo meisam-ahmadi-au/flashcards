@@ -1,5 +1,6 @@
 import React, { SyntheticEvent } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
+import Api from '../../api/Api';
 import flashcardImageSrc from '../../assets/flashcard.png';
 import { randomBackgroundColor } from '../../util/helpers';
 import SvgIcons from '../SvgIcons/SvgIcons';
@@ -11,16 +12,24 @@ interface IProps extends RouteComponentProps {
   category: string;
   categoryId: number;
   createdAt: number;
+  getAllCategories: () => void;
 }
 
-const Deck: React.FC<IProps> = props => {
-  const { totalNumberOfCards, category, history } = props;
+const Category: React.FC<IProps> = props => {
+  const { totalNumberOfCards, category, history, getAllCategories } = props;
 
   const goTo = (url: string) => (e: SyntheticEvent) => {
     e.stopPropagation();
     history.push(url);
   };
 
+  const deleteCategory = (categoryName: string) => async (
+    e: SyntheticEvent
+  ) => {
+    e.stopPropagation();
+    await Api.deleteCategory(categoryName);
+    getAllCategories();
+  };
   return (
     <div
       className={styles.deck}
@@ -57,6 +66,7 @@ const Deck: React.FC<IProps> = props => {
           iconId="delete"
           strokeWidth="0"
           title="delete"
+          onClick={deleteCategory(category)}
         />
 
         <SvgIcons
@@ -70,4 +80,4 @@ const Deck: React.FC<IProps> = props => {
   );
 };
 
-export default withRouter(Deck);
+export default withRouter(Category);

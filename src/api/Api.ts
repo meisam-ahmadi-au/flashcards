@@ -86,6 +86,9 @@ class FlashCardApis {
 
   public static deleteCard = async (category: string, cardId: string) =>
     functions.httpsCallable('deteleCard')({ category, cardId });
+
+  public static deleteCategory = async (category: string) =>
+    functions.httpsCallable('deleteCategory')({ category });
 }
 
 export default FlashCardApis;

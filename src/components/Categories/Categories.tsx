@@ -21,7 +21,9 @@ class DecksContainer extends React.Component<{}, IState> {
   public getAllCategories = async () => {
     const { uid } = this.context;
     const allCategoriesSorted = await Api.getAllCategories(uid);
-    this.setState({ categories: [...allCategoriesSorted!] });
+    if (Array.isArray(allCategoriesSorted)) {
+      this.setState({ categories: [...allCategoriesSorted!] });
+    }
   };
 
   public render() {
@@ -34,7 +36,11 @@ class DecksContainer extends React.Component<{}, IState> {
         <AddCategory getAllCategories={this.getAllCategories} />
         <div className="decks__container">
           {categories.map(cat => (
-            <Category {...cat} key={cat.categoryId} />
+            <Category
+              {...cat}
+              key={cat.categoryId}
+              getAllCategories={this.getAllCategories}
+            />
           ))}
         </div>
       </div>

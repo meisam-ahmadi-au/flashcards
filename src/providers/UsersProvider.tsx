@@ -16,6 +16,7 @@ class UsersProvider extends Component {
     if (user) {
       this.setState({ user: JSON.parse(user) });
     }
+
     this.unsubscribeFromAuthentication = auth.onAuthStateChanged(
       async userAuth => {
         console.log({ userAuth });
@@ -26,14 +27,17 @@ class UsersProvider extends Component {
         localStorage.setItem('user', JSON.stringify(userAuth));
         const userRef = await createUserProfile(userAuth);
         if (userRef) {
-          userRef.onSnapshot(userSnapshot => {
-            return this.setState({
-              user: {
-                uid: userSnapshot.id,
-                ...userSnapshot.data()
-              }
-            });
-          });
+          userRef.onSnapshot(
+            userSnapshot => {
+              return this.setState({
+                user: {
+                  uid: userSnapshot.id,
+                  ...userSnapshot.data()
+                }
+              });
+            },
+            err => console.log({ err })
+          );
         } else {
           return this.setState({ user: userAuth });
         }

@@ -88,6 +88,25 @@ export const getAllCardsByCategoryName = functions.https.onCall(
     };
   }
 );
+
+export const deleteCategory = functions.https.onCall(
+  async ({ category }, context) => {
+    const uid = context.auth!.uid;
+    const { categoryId } = await getCategoryDetailByCategoryName(uid, category);
+    const categoryRef = await firestore.doc(
+      `otherInfo/${uid}/categories/${categoryId}`
+    );
+    const categroyInfo = await categoryRef.get();
+    if (categroyInfo.data()!.totalNumberOfCards === 0) {
+      return categoryRef.delete().then(() => ({ isSucceessful: true }));
+    }
+    return new functions.https.HttpsError('unknown', 'failed', {
+      isSucceessful: false,
+      reason: 'category is not empty'
+    });
+  }
+);
+
 export const deteleCard = functions.https.onCall(
   async ({ category, cardId }, context) => {
     const uid = context.auth!.uid;

@@ -56,7 +56,6 @@ const AllCards: React.FC<RouteComponentProps> = props => {
         user.uid,
         category
       );
-      console.log({ allCardsInCategory });
       setAllCards(allCardsInCategory);
     })();
   }, [user, category]);
