@@ -1,0 +1,15 @@
+version: '3.7'
+
+services:
+  frontend:
+    container_name: awesomeflashcard
+    build: ./
+    ports:
+      - '3000:3000'
+    working_dir: /web
+    command:  npm start
+    volumes:
+      - ./:/web
+      - /web/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
