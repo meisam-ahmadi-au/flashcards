@@ -9,9 +9,7 @@
   "jsRules": {},
   "rules": {
     "prettier": true,
-    "max-line-length": [
-      true, 120
-    ],
+    "max-line-length": [true, 120],
     "jsx-wrap-multiline": true,
     "object-literal-sort-keys": false
   },
