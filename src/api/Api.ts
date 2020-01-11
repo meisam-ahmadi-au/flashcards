@@ -74,9 +74,9 @@ class FlashCardApis {
     uid: string,
     category: string
   ) => {
-    const { data } = await functions.httpsCallable('getAllCardsByCategoryName')(
-      { category }
-    );
+    const { data } = await functions.httpsCallable(
+      'getAllCardsByCategoryName'
+    )({ category });
     const { allCards } = data;
     return [...allCards];
   };

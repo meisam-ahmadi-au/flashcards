@@ -5,11 +5,8 @@ import AddCategoryInput from './AddCategoryInput';
 interface IAddCategoryState {
   showAddCategoryForm: boolean;
 }
-interface IAddCategoryProps {
-  getAllCategories: () => void;
-}
 
-class AddCategory extends Component<IAddCategoryProps> {
+class AddCategory extends Component {
   public state = {
     showAddCategoryForm: false
   };
@@ -31,9 +28,7 @@ class AddCategory extends Component<IAddCategoryProps> {
           onClick={this.toggleAddCategoryForm}
         />
 
-        {showAddCategoryForm && (
-          <AddCategoryInput getAllCategories={this.props.getAllCategories} />
-        )}
+        {showAddCategoryForm && <AddCategoryInput />}
       </div>
     );
   }

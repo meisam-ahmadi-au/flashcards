@@ -1,7 +1,10 @@
-import React, { SyntheticEvent } from 'react';
+import React, { SyntheticEvent, useContext } from 'react';
+import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 import Api from '../../api/Api';
 import flashcardImageSrc from '../../assets/flashcard.png';
+import { UsersContext } from '../../providers/UsersProvider';
+import { getAllCategories } from '../../store/actions/actionCreators';
 import { randomBackgroundColor } from '../../util/helpers';
 import SvgIcons from '../SvgIcons/SvgIcons';
 import styles from './Category.module.scss';
@@ -12,11 +15,13 @@ interface IProps extends RouteComponentProps {
   category: string;
   categoryId: number;
   createdAt: number;
-  getAllCategories: () => void;
+  getAllCategories: (uid: string) => void;
 }
 
 const Category: React.FC<IProps> = props => {
-  const { totalNumberOfCards, category, history, getAllCategories } = props;
+  const { totalNumberOfCards, category, history } = props;
+
+  const { uid } = useContext(UsersContext)!;
 
   const goTo = (url: string) => (e: SyntheticEvent) => {
     e.stopPropagation();
@@ -28,7 +33,7 @@ const Category: React.FC<IProps> = props => {
   ) => {
     e.stopPropagation();
     await Api.deleteCategory(categoryName);
-    getAllCategories();
+    props.getAllCategories(uid);
   };
   return (
     <div
@@ -80,4 +85,4 @@ const Category: React.FC<IProps> = props => {
   );
 };
 
-export default withRouter(Category);
+export default connect(null, { getAllCategories })(withRouter(Category));

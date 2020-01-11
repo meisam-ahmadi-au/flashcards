@@ -1,5 +1,6 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
+import * as moment from 'moment';
 
 admin.initializeApp();
 const firestore = admin.firestore();
@@ -137,4 +138,18 @@ const getCategoryDetailByCategoryName = async (
 
   const categoriesSnapshot = categoriesRef.docs.map(doc => doc.data());
   return { ...categoriesSnapshot[0] };
+};
+
+const hasUnreviewedCard = async (uid: string, categoryId: string) => {
+  const startOfToday = moment()
+    .startOf('day')
+    .valueOf();
+
+  const cardsRef = await firestore
+    .collection(`cards/${uid}/${categoryId}`)
+    .where('nextReadTime', '<', startOfToday)
+    .orderBy('nextReadTime')
+    .get();
+
+  return cardsRef.empty;
 };

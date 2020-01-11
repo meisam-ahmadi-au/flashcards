@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Api from '../../api/Api';
+import { UsersContext } from '../../providers/UsersProvider';
+import { getAllCategories } from '../../store/actions/actionCreators';
 import { Modal } from '../Portal/Portal';
 import Spinner from '../Spinner/Spinner';
 
-interface IAddCategoryInputProps {
-  getAllCategories: () => void;
+interface IProps {
+  getAllCategories: (uid: string) => void;
 }
-
-class AddCategoryInput extends Component<IAddCategoryInputProps> {
+class AddCategoryInput extends Component<IProps> {
   public state = {
     category: '',
     isLoading: false
@@ -19,6 +21,7 @@ class AddCategoryInput extends Component<IAddCategoryInputProps> {
   };
 
   public onAddCategory = async () => {
+    const { uid } = this.context;
     const { category } = this.state;
     if (!category) {
       return false;
@@ -27,7 +30,7 @@ class AddCategoryInput extends Component<IAddCategoryInputProps> {
     this.setState({ isLoading: true });
     await Api.addCategory(category).catch(console.log);
     this.setState({ category: '', isLoading: false });
-    this.props.getAllCategories();
+    this.props.getAllCategories(uid);
   };
 
   public render() {
@@ -57,4 +60,5 @@ class AddCategoryInput extends Component<IAddCategoryInputProps> {
   }
 }
 
-export default AddCategoryInput;
+AddCategoryInput.contextType = UsersContext;
+export default connect(null, { getAllCategories })(AddCategoryInput);

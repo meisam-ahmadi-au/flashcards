@@ -1,46 +1,33 @@
 import React from 'react';
-import Api from '../../api/Api';
+import { connect } from 'react-redux';
 import { UsersContext } from '../../providers/UsersProvider';
+import { getAllCategories } from '../../store/actions/actionCreators';
 import { ICategory } from '../../util/interfaces';
 import AddCategory from './AddCategory';
 import './Categories.scss';
 import Category from './Category';
-
-interface IState {
+interface IProps {
   categories: ICategory[];
+  getAllCategories: (uid: string) => void;
 }
-class DecksContainer extends React.Component<{}, IState> {
-  public state = {
-    categories: [] as ICategory[]
-  };
-
+class DecksContainer extends React.Component<IProps> {
   public async componentDidMount() {
-    this.getAllCategories();
+    const { uid } = this.context;
+    this.props.getAllCategories(uid);
   }
 
-  public getAllCategories = async () => {
-    const { uid } = this.context;
-    const allCategoriesSorted = await Api.getAllCategories(uid);
-    if (Array.isArray(allCategoriesSorted)) {
-      this.setState({ categories: [...allCategoriesSorted!] });
-    }
-  };
-
   public render() {
-    const { categories } = this.state;
+    console.log(this.props);
+    const { categories } = this.props;
     if (!categories) {
       return;
     }
     return (
       <div className="decks">
-        <AddCategory getAllCategories={this.getAllCategories} />
+        <AddCategory />
         <div className="decks__container">
           {categories.map(cat => (
-            <Category
-              {...cat}
-              key={cat.categoryId}
-              getAllCategories={this.getAllCategories}
-            />
+            <Category {...cat} key={cat.categoryId} />
           ))}
         </div>
       </div>
@@ -49,4 +36,5 @@ class DecksContainer extends React.Component<{}, IState> {
 }
 
 DecksContainer.contextType = UsersContext;
-export default DecksContainer;
+const mapStateToProps = (state: any) => ({ categories: state.categories });
+export default connect(mapStateToProps, { getAllCategories })(DecksContainer);
