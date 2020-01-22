@@ -1,4 +1,7 @@
-import { firestore, functions } from '../firebase/firebase';
+import {
+  firestore,
+  functions
+} from '../components/FirebaseAuthentication/FirebaseAuthentication';
 
 export const doBatch = (adjectives: any, state: any, context: any) => {
   console.log('cards =>', Object.keys(adjectives).length);

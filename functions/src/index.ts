@@ -1,9 +1,25 @@
+// ! GOOGLE Functions
+
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
-import * as moment from 'moment';
+// import * as moment from 'moment';
 
 admin.initializeApp();
 const firestore = admin.firestore();
+
+export const createUserProfile = functions.auth.user().onCreate(async user => {
+  const userRef = await firestore.doc(`users/${user.uid}`);
+  const userSnapshot = await userRef.get();
+
+  if (!userSnapshot.exists) {
+    const { displayName, email, photoURL, uid } = user;
+    const createdAt = new Date();
+
+    await userRef
+      .set({ displayName, email, photoURL, uid, createdAt })
+      .catch(err => console.log(err));
+  }
+});
 
 export const updateCardsCountOnCreate = functions.firestore
   .document(`cards/{userId}/{categoryId}/{cardId}`)
@@ -140,16 +156,16 @@ const getCategoryDetailByCategoryName = async (
   return { ...categoriesSnapshot[0] };
 };
 
-const hasUnreviewedCard = async (uid: string, categoryId: string) => {
-  const startOfToday = moment()
-    .startOf('day')
-    .valueOf();
+// const hasUnreviewedCard = async (uid: string, categoryId: string) => {
+//   const startOfToday = moment()
+//     .startOf('day')
+//     .valueOf();
 
-  const cardsRef = await firestore
-    .collection(`cards/${uid}/${categoryId}`)
-    .where('nextReadTime', '<', startOfToday)
-    .orderBy('nextReadTime')
-    .get();
+//   const cardsRef = await firestore
+//     .collection(`cards/${uid}/${categoryId}`)
+//     .where('nextReadTime', '<', startOfToday)
+//     .orderBy('nextReadTime')
+//     .get();
 
-  return cardsRef.empty;
-};
+//   return cardsRef.empty;
+// };

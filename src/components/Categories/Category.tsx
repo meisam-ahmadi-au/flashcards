@@ -4,7 +4,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import Api from '../../api/Api';
 import flashcardImageSrc from '../../assets/flashcard.png';
 import { UsersContext } from '../../providers/UsersProvider';
-import { getAllCategories } from '../../store/actions/actionCreators';
+import { getAllCategories } from '../../store/actions/categoriesActions';
 import { randomBackgroundColor } from '../../util/helpers';
 import SvgIcons from '../SvgIcons/SvgIcons';
 import styles from './Category.module.scss';

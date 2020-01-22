@@ -9,7 +9,8 @@ services:
     working_dir: /web
     command:  npm start
     volumes:
-      - ./:/web
+      - ./src:/web/src
+      - ./public:/web/public
       - /web/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true

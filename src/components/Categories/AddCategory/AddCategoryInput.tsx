@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Api from '../../api/Api';
-import { UsersContext } from '../../providers/UsersProvider';
-import { getAllCategories } from '../../store/actions/actionCreators';
-import { Modal } from '../Portal/Portal';
-import Spinner from '../Spinner/Spinner';
+import Api from '../../../api/Api';
+import { UsersContext } from '../../../providers/UsersProvider';
+import { getAllCategories } from '../../../store/actions/categoriesActions';
+import { Modal } from '../../Portal/Portal';
+import Spinner from '../../Spinner/Spinner';
 
 interface IProps {
   getAllCategories: (uid: string) => void;

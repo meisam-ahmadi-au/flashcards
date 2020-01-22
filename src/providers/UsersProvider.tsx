@@ -1,7 +1,9 @@
 import { Unsubscribe as FirebaseUnsubscribe } from 'firebase';
 import React, { Component } from 'react';
-import { auth } from '../firebase/firebase';
-import { createUserProfile } from '../firebase/firebaseAuthenticate';
+import {
+  auth,
+  firestore
+} from '../components/FirebaseAuthentication/FirebaseAuthentication';
 
 export const UsersContext = React.createContext(null);
 
@@ -25,16 +27,12 @@ class UsersProvider extends Component {
           return this.setState({ user: null });
         }
         localStorage.setItem('user', JSON.stringify(userAuth));
-        const userRef = await createUserProfile(userAuth);
+        // const userRef = await createUserProfile(userAuth);
+        const userRef = await firestore.collection('users').doc(userAuth.uid);
         if (userRef) {
           userRef.onSnapshot(
             userSnapshot => {
-              return this.setState({
-                user: {
-                  uid: userSnapshot.id,
-                  ...userSnapshot.data()
-                }
-              });
+              return this.setState({ user: { ...userSnapshot.data() } });
             },
             err => console.log({ err })
           );
