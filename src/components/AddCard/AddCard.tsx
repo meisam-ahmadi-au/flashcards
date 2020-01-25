@@ -1,11 +1,16 @@
-import React, { Component, SyntheticEvent } from 'react';
+import React, { Component, SyntheticEvent, useEffect, useReducer } from 'react';
+import { useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import Api from '../../api/Api';
 import { UsersContext } from '../../providers/UsersProvider';
+import reducers from '../../store/reducers/reducers';
+import { IReduxStates } from '../../store/reducers/states';
 import AddOrUpdate from './AddOrUpdate';
 
-class AddCards extends Component<RouteComponentProps> {
-  public state = {
+const AddCards: React.FC<RouteComponentProps> = props => {
+  const user = useSelector((s: IReduxStates) => s.auth.user);
+
+  const intialState = {
     front: '',
     back: '',
     category: '',
@@ -13,25 +18,29 @@ class AddCards extends Component<RouteComponentProps> {
     categoryId: ''
   };
 
-  public componentDidMount = async () => {
-    const { category } = this.props.match.params as { category: string };
-    const user = this.context as firebase.User;
-    const {
-      categoryId,
-      totalNumberOfCards
-    } = await Api.getCategoryDetailByCategoryName(user.uid, category);
-    this.setState({ category, totalNumberOfCards, categoryId });
-  };
+  const reducers = (state: any, payload: any) => ({ ...state, ...payload });
 
-  public onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const [state, setState] = useReducer(reducers, intialState);
+
+  useEffect(() => {
+    const { category } = props.match.params as { category: string };
+    (async () => {
+      const {
+        categoryId,
+        totalNumberOfCards
+      } = await Api.getCategoryDetailByCategoryName(user.uid, category);
+      setState({ category, totalNumberOfCards, categoryId });
+    })();
+  }, []);
+
+  const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;
-    this.setState({ [name]: value });
+    setState({ [name]: value });
   };
 
-  public addCard = async (e: SyntheticEvent) => {
+  const addCard = async (e: SyntheticEvent) => {
     e.preventDefault();
-    const user = this.context as firebase.User;
-    const { front, back, categoryId } = this.state;
+    const { front, back, categoryId } = state;
 
     if (front && back && categoryId) {
       const createdAt = Date.now();
@@ -45,27 +54,24 @@ class AddCards extends Component<RouteComponentProps> {
       };
 
       await Api.addCard(user.uid, categoryId)(newCard).catch(console.log);
-      this.setState({ front: '', back: '' });
+      setState({ front: '', back: '' });
     }
   };
 
-  public goBack = () => {
-    this.props.history.goBack();
+  const goBack = () => {
+    props.history.goBack();
   };
 
-  public render() {
-    const { category, totalNumberOfCards, front, back } = this.state;
-    const addProps = { category, totalNumberOfCards, front, back };
-    return (
-      <AddOrUpdate
-        {...addProps}
-        onSubmit={this.addCard}
-        onCancel={this.goBack}
-        onInputChange={this.onInputChange}
-      />
-    );
-  }
-}
+  const { category, totalNumberOfCards, front, back } = state;
+  const addProps = { category, totalNumberOfCards, front, back };
+  return (
+    <AddOrUpdate
+      {...addProps}
+      onSubmit={addCard}
+      onCancel={goBack}
+      onInputChange={onInputChange}
+    />
+  );
+};
 
-AddCards.contextType = UsersContext;
 export default AddCards;

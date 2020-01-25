@@ -1,20 +1,25 @@
 import actionTypes from '../actions/actionTypes';
-import { updateState } from './reducerHelper';
+import { updateState } from '../reduxHelpers';
 import { ICategoriesState } from './states';
 export interface IAction {
   type: string;
-  payload?: ICategoriesState;
+  payload: Partial<ICategoriesState>;
 }
 
 const initialState: ICategoriesState = {
-  categories: []
+  categories: [],
+  category: ''
 };
 
-const reducer = (state = initialState, action: IAction) => {
-  if (action.type === actionTypes.SET_CATEGORIES) {
-    return updateState(state, { categories: action.payload?.categories });
+const categoriesReducers = (state = initialState, action: IAction) => {
+  switch (action.type) {
+    case actionTypes.SET_CATEGORIES:
+      return updateState(state, { categories: action.payload?.categories });
+    case actionTypes.SET_CATEGORY:
+      return updateState(state, { category: action.payload?.category });
+    default:
+      return state;
   }
-  return state;
 };
 
-export default reducer;
+export default categoriesReducers;

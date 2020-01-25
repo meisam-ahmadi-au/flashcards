@@ -1,10 +1,8 @@
-import React, { SyntheticEvent, useContext } from 'react';
-import { connect } from 'react-redux';
+import React, { SyntheticEvent } from 'react';
+import { useDispatch } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
-import Api from '../../api/Api';
 import flashcardImageSrc from '../../assets/flashcard.png';
-import { UsersContext } from '../../providers/UsersProvider';
-import { getAllCategories } from '../../store/actions/categoriesActions';
+import { deleteCategoryAndUpdate } from '../../store/actions/categoriesActions';
 import { randomBackgroundColor } from '../../util/helpers';
 import SvgIcons from '../SvgIcons/SvgIcons';
 import styles from './Category.module.scss';
@@ -15,26 +13,22 @@ interface IProps extends RouteComponentProps {
   category: string;
   categoryId: number;
   createdAt: number;
-  getAllCategories: (uid: string) => void;
 }
 
 const Category: React.FC<IProps> = props => {
   const { totalNumberOfCards, category, history } = props;
-
-  const { uid } = useContext(UsersContext)!;
+  const dispatch = useDispatch();
 
   const goTo = (url: string) => (e: SyntheticEvent) => {
     e.stopPropagation();
     history.push(url);
   };
 
-  const deleteCategory = (categoryName: string) => async (
-    e: SyntheticEvent
-  ) => {
+  const deleteCategory = (categoryName: string) => (e: SyntheticEvent) => {
     e.stopPropagation();
-    await Api.deleteCategory(categoryName);
-    props.getAllCategories(uid);
+    dispatch(deleteCategoryAndUpdate(categoryName));
   };
+
   return (
     <div
       className={styles.deck}
@@ -85,4 +79,4 @@ const Category: React.FC<IProps> = props => {
   );
 };
 
-export default connect(null, { getAllCategories })(withRouter(Category));
+export default withRouter(Category);

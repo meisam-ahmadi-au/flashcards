@@ -1,18 +1,19 @@
-import { User } from 'firebase';
 import React from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
-import Api from '../../api/Api';
-import { UsersContext } from '../../providers/UsersProvider';
+import { getAllCardsInCategory } from '../../store/actions/cardsActions';
+import { IReduxStates } from '../../store/reducers/states';
 import { ICard, IUpdateCard } from '../../util/interfaces';
 import Styles from './AllCards.module.scss';
 import Card from './Card';
 
 const AllCards: React.FC<RouteComponentProps> = props => {
+  const dispatch = useDispatch();
   const { category } = props.match.params as { category: string };
-  const user = React.useContext(UsersContext)! as User;
+  const user = useSelector((s: IReduxStates) => s.auth.user);
   const [allCards, setAllCards] = React.useState([] as ICard[]);
   const [keyword, setKeyword] = React.useState('');
+  // const allCards = useSelector((s: IReduxStates) => s.cards.cards);
 
   const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
@@ -31,6 +32,7 @@ const AllCards: React.FC<RouteComponentProps> = props => {
     }
   };
 
+  // #region toBeDeleted
   const deleteCard = (cardId: string) => {
     const newCards = allCards.filter(card => card.cardId !== cardId);
     setAllCards(newCards);
@@ -49,24 +51,15 @@ const AllCards: React.FC<RouteComponentProps> = props => {
     });
     setAllCards(newCards);
   };
+  // #endregion
 
   React.useEffect(() => {
-    (async () => {
-      const allCardsInCategory = await Api.getAllCardsInCategory(
-        user.uid,
-        category
-      );
-      setAllCards(allCardsInCategory);
-    })();
+    dispatch(getAllCardsInCategory(category));
   }, [user, category]);
 
   return (
     <div className={Styles['all-cards']}>
-      <h3
-        className={Styles['all-cards__title']}
-        // @ts-ignore
-        onClick={props.getAllCardsInCategory}
-      >
+      <h3 className={Styles['all-cards__title']}>
         {`All Cards in ${category}`}
       </h3>
       <input
@@ -87,13 +80,5 @@ const AllCards: React.FC<RouteComponentProps> = props => {
     </div>
   );
 };
-// @ts-ignore
-const mapStateToProps = state => {
-  return { categories: state.categories };
-};
 
-// @ts-ignore
-// const mapDispatchToProps = dispatch => ({
-//   add: () => dispatch({ type: 'add' })
-// });
-export default connect(mapStateToProps, null)(AllCards);
+export default AllCards;

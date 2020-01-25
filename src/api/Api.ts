@@ -1,5 +1,8 @@
 import moment from 'moment';
-import { firestore, functions } from '../components/FirebaseAuthentication/FirebaseAuthentication';
+import {
+  firestore,
+  functions
+} from '../components/FirebaseAuthentication/FirebaseAuthentication';
 import { ICategory, INewCard, IUpdateCard } from '../util/interfaces';
 
 const retreiveTodaysCardsByCategoryId = async (

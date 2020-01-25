@@ -1,8 +1,10 @@
 import moment from 'moment';
 import React, { Component } from 'react';
+import { useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import Api from '../../api/Api';
 import { UsersContext } from '../../providers/UsersProvider';
+import { IReduxStates } from '../../store/reducers/states';
 import { ICard } from '../../util/interfaces';
 import { IIntervalDeatilsWithQuality } from '../../util/superMemoII';
 import Spinner from '../Spinner/Spinner';
@@ -17,7 +19,7 @@ export class Cards extends Component<RouteComponentProps> {
   };
 
   public componentDidMount = async () => {
-    const { uid } = this.context;
+    const { uid } = useSelector((s: IReduxStates) => s.auth.user);
     const { category } = this.props.match.params as { category: string };
 
     const { categoryId } = await Api.getCategoryDetailByCategoryName(
@@ -42,7 +44,7 @@ export class Cards extends Component<RouteComponentProps> {
     interval
   }: IIntervalDeatilsWithQuality) => {
     const { cards, categoryId } = this.state;
-    const { uid } = this.context;
+    const { uid } = useSelector((s: IReduxStates) => s.auth.user);
     const activeCard = {
       ...this.state.activeCard,
       cardId: this.state.activeCard.cardId!,

@@ -1,22 +1,24 @@
+import { Dispatch } from 'redux';
 import {
   auth,
   firestore,
   signout
 } from '../../components/FirebaseAuthentication/FirebaseAuthentication';
+import { IReduxStates } from './../reducers/states';
 import { ActionCreators } from './actionTypes';
 
 let unsubscribeFromAuthentication: () => void;
 let unsubscribeFromUser: () => void;
 
 export const subscribeToAuth = () => async (
-  dispatch: any,
-  getState: () => any
+  dispatch: Dispatch<any>,
+  getState: () => IReduxStates
 ) => {
   unsubscribeFromAuthentication = auth.onAuthStateChanged(async userAuth => {
     if (!userAuth) {
       localStorage.setItem('user', JSON.stringify(null));
       dispatch(ActionCreators.unsetUser());
-    } else if (userAuth.uid !== getState().auth?.user?.uid) {
+    } else if (userAuth.uid !== getState().auth.user.uid) {
       dispatch(getUserData(userAuth));
     }
   });

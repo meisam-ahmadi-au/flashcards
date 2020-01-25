@@ -1,64 +1,51 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import Api from '../../../api/Api';
-import { UsersContext } from '../../../providers/UsersProvider';
-import { getAllCategories } from '../../../store/actions/categoriesActions';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { ActionCreators } from '../../../store/actions/actionTypes';
+import { addCategoryAndUpdate } from '../../../store/actions/categoriesActions';
+import { IReduxStates } from '../../../store/reducers/states';
 import { Modal } from '../../Portal/Portal';
 import Spinner from '../../Spinner/Spinner';
 
-interface IProps {
-  getAllCategories: (uid: string) => void;
-}
-class AddCategoryInput extends Component<IProps> {
-  public state = {
-    category: '',
-    isLoading: false
+const AddCategoryInput: React.FC = () => {
+  const dispatch = useDispatch();
+  const { isLoading, category } = useSelector((state: IReduxStates) => ({
+    isLoading: state.general.isLoading,
+    category: state.categories.category
+  }));
+
+  const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.currentTarget;
+    dispatch(ActionCreators.setCategory(value));
   };
 
-  public onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.currentTarget;
-    this.setState({ [name]: value });
-  };
-
-  public onAddCategory = async () => {
-    const { uid } = this.context;
-    const { category } = this.state;
+  const onAddCategory = async () => {
     if (!category) {
       return false;
     }
-
-    this.setState({ isLoading: true });
-    await Api.addCategory(category).catch(console.log);
-    this.setState({ category: '', isLoading: false });
-    this.props.getAllCategories(uid);
+    dispatch(addCategoryAndUpdate(category));
   };
 
-  public render() {
-    const { isLoading } = this.state;
+  return (
+    <div>
+      {isLoading && (
+        <Modal>
+          <Spinner />
+        </Modal>
+      )}
 
-    return (
-      <div>
-        {isLoading && (
-          <Modal>
-            <Spinner />
-          </Modal>
-        )}
+      <input
+        type="text"
+        name="category"
+        value={category}
+        placeholder="New Category"
+        onChange={onInputChange}
+      />
 
-        <input
-          type="text"
-          name="category"
-          value={this.state.category}
-          placeholder="New Category"
-          onChange={this.onInputChange}
-        />
+      <button onClick={onAddCategory} disabled={isLoading}>
+        Add Category
+      </button>
+    </div>
+  );
+};
 
-        <button onClick={this.onAddCategory} disabled={isLoading}>
-          Add Category
-        </button>
-      </div>
-    );
-  }
-}
-
-AddCategoryInput.contextType = UsersContext;
-export default connect(null, { getAllCategories })(AddCategoryInput);
+export default AddCategoryInput;

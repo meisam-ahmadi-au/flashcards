@@ -1,5 +1,5 @@
 import actionTypes from '../actions/actionTypes';
-import { updateState } from './reducerHelper';
+import { updateState } from '../reduxHelpers';
 import { IAuthState } from './states';
 export interface IAuthAction {
   type: string;
@@ -20,11 +20,11 @@ const initialState: IAuthState = {
 };
 // #endregion
 
-const reducer = (state = initialState, action: IAuthAction) => {
+const authReducers = (state = initialState, action: IAuthAction) => {
   if (action.type === actionTypes.SET_USER) {
     return updateState(state, { user: action.payload?.user });
   }
   return state;
 };
 
-export default reducer;
+export default authReducers;

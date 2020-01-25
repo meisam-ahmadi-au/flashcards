@@ -9,9 +9,9 @@ const Home = () => {
     <div className={Styles.home}>
       <h1>Welcome to Awesome flashcards</h1>
       <div className={Styles.home__hero}>
-        <ShowIf.Logged>
+        <ShowIf.NotLogged>
           <FirebaseAuthentication />
-        </ShowIf.Logged>
+        </ShowIf.NotLogged>
         <HomeImageAnimated />
       </div>
     </div>

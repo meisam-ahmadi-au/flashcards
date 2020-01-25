@@ -1,5 +1,5 @@
 import React from 'react';
-import { ICard } from '../../util/interfaces';
+import { ICard, IUpdateCard } from '../../util/interfaces';
 import { Modal } from '../Portal/Portal';
 import SvgIcons from '../SvgIcons/SvgIcons';
 import Styles from './Card.module.scss';

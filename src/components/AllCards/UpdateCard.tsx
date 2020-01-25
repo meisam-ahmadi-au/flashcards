@@ -1,6 +1,8 @@
 import React, { SyntheticEvent } from 'react';
+import { useSelector } from 'react-redux';
 import Api from '../../api/Api';
 import { UsersContext } from '../../providers/UsersProvider';
+import { IReduxStates } from '../../store/reducers/states';
 import { IUpdateCard } from '../../util/interfaces';
 import AddOrUpdate from '../AddCard/AddOrUpdate';
 import Spinner from '../Spinner/Spinner';
@@ -34,7 +36,7 @@ class UpdateCard extends React.Component<IUpdatedCardProps> {
   public updateCard = async (e: SyntheticEvent) => {
     e.preventDefault();
     this.setState({ isLoading: true });
-    const user = this.context as firebase.User;
+    const user = useSelector((s: IReduxStates) => s.auth.user);
     const { front, back, categoryId, cardId } = this.state;
 
     if (front === this.props.front && back === this.props.back) {
@@ -42,9 +44,10 @@ class UpdateCard extends React.Component<IUpdatedCardProps> {
     } else if (front && back && categoryId && cardId) {
       const updatedCard = { front, back, cardId };
       console.log({ updatedCard });
-      await Api.updateCard(user.uid, categoryId)(updatedCard).catch(
-        console.log
-      );
+      await Api.updateCard(
+        user.uid,
+        categoryId
+      )(updatedCard).catch(console.log);
       // this.setState({isLoading: false});
       this.props.updateCard(updatedCard);
     }
