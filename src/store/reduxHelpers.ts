@@ -1,4 +1,7 @@
-export const updateState = <T>(oldStates: T, updatedValue: Partial<T>): T => ({
+export const updateState = <T>(
+  oldStates: T,
+  updatedValue: Partial<T> = {}
+): T => ({
   ...oldStates,
   ...updatedValue
 });

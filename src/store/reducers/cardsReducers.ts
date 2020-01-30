@@ -19,10 +19,13 @@ const initialState: ICardsState = {
 };
 
 const cardsReducer = (state = initialState, action: ICardsAction) => {
-  if (action.type === actionTypes.SET_CARDS) {
-    return updateState(state, { cards: action.payload?.cards });
+  switch (action.type) {
+    case actionTypes.SET_CARDS:
+    case actionTypes.SET_CARD:
+      return updateState(state, action.payload);
+    default:
+      return state;
   }
-  return state;
 };
 
 export default cardsReducer;

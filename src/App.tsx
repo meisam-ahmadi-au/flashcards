@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Route } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import './App.css';
 import AddCard from './components/AddCard/AddCard';
 import AllCards from './components/AllCards/AllCards';
@@ -13,9 +13,9 @@ import ShowIf from './components/ShowIf/ShowIf';
 import Spinner from './components/Spinner/Spinner';
 import { IReduxStates } from './store/reducers/states';
 
-const App: React.FC = () => {
+const App: React.FC = props => {
   const isLoading = useSelector((s: IReduxStates) => s.general.isLoading);
-
+  console.log({ props });
   return (
     <div className="app">
       {isLoading && (
@@ -25,22 +25,24 @@ const App: React.FC = () => {
       )}
       <Navbar />
       <div className="app__body">
+        <Route exact={true} path="/" component={Home} />
         <ShowIf.Logged>
           <Route
             exact={true}
             path="/categories/:category/addcard"
             component={AddCard}
           />
-          <Route exact={true} path="/categories/:category" component={Cards} />
           <Route
             exact={true}
             path="/categories/:category/allcards"
             component={AllCards}
           />
+          <Route exact={true} path="/categories/:category" component={Cards} />
           <Route exact={true} path="/categories" component={Categories} />
         </ShowIf.Logged>
-        <Route path="/" exact={true} component={Home} />
-        {/* <Redirect to="/" /> */}
+        <Route path="/:anythingelse">
+          <Redirect to="/" />
+        </Route>
       </div>
     </div>
   );

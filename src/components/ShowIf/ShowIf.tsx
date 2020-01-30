@@ -1,18 +1,15 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { IReduxStates } from '../../store/reducers/states';
+import { Redirect } from 'react-router-dom';
 
-interface IChild {
-  children: ReactNode;
-}
-
-export const Logged: React.FC<IChild> = ({ children }) => {
-  const user = useSelector((state: IReduxStates) => state.auth.user);
-  return user ? <>{children}</> : null;
+export const Logged: React.FC = ({ children }) => {
+  const user = useSelector((state: IReduxStates) => state.auth?.user);
+  return user ? <>{children}</> : <Redirect to="/" />;
 };
 
-export const NotLogged: React.FC<IChild> = ({ children }) => {
-  const user = useSelector((state: IReduxStates) => state.auth.user);
+export const NotLogged: React.FC = ({ children }) => {
+  const user = useSelector((state: IReduxStates) => state.auth?.user);
   return !user ? <>{children}</> : null;
 };
 

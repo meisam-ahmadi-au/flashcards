@@ -5,7 +5,7 @@ import 'firebase/functions';
 import React from 'react';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { useDispatch } from 'react-redux';
-import { ActionCreators } from '../../store/actions/actionTypes';
+import { Actions } from '../../store/actions/actionTypes';
 import { routes } from '../../util/constants';
 
 const firebaseConfig = {
@@ -45,7 +45,8 @@ const FirebaseAuthentication = () => {
     callbacks: {
       signInSuccessWithAuthResult(authResult: any, redirectUrl: any) {
         const user = authResult.user;
-        dispatch(ActionCreators.setUser(user));
+        dispatch(Actions.setUser(user));
+        redirectUrl('/');
         return true;
       }
     }

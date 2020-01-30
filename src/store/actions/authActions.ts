@@ -5,7 +5,7 @@ import {
   signout
 } from '../../components/FirebaseAuthentication/FirebaseAuthentication';
 import { IReduxStates } from './../reducers/states';
-import { ActionCreators } from './actionTypes';
+import { Actions } from './actionTypes';
 
 let unsubscribeFromAuthentication: () => void;
 let unsubscribeFromUser: () => void;
@@ -17,8 +17,8 @@ export const subscribeToAuth = () => async (
   unsubscribeFromAuthentication = auth.onAuthStateChanged(async userAuth => {
     if (!userAuth) {
       localStorage.setItem('user', JSON.stringify(null));
-      dispatch(ActionCreators.unsetUser());
-    } else if (userAuth.uid !== getState().auth.user.uid) {
+      dispatch(Actions.unsetUser());
+    } else if (userAuth.uid !== getState().auth.user?.uid) {
       dispatch(getUserData(userAuth));
     }
   });
@@ -34,16 +34,17 @@ const getUserData = (userAuth: firebase.User) => async (
   if (!userRef) {
     localStorage.setItem('user', JSON.stringify(userAuth));
     if (currentStateUser.uid !== userAuth.uid) {
-      dispatch(ActionCreators.setUser(userAuth));
+      dispatch(Actions.setUser(userAuth));
     }
   } else {
     unsubscribeFromUser = userRef.onSnapshot(
       userSnapshot => {
         localStorage.setItem('user', JSON.stringify(userSnapshot.data()));
-        if (currentStateUser.uid !== userSnapshot.data()?.uid) {
-          dispatch(
-            ActionCreators.setUser(userSnapshot.data() as firebase.User)
-          );
+        if (
+          currentStateUser &&
+          currentStateUser.uid !== userSnapshot.data()?.uid
+        ) {
+          dispatch(Actions.setUser(userSnapshot.data() as firebase.User));
         }
       },
       err => console.log({ err })
@@ -67,7 +68,7 @@ export const logout = () => async (dispatch: any) => {
     unsubscribeFromAuthentication();
   }
 
-  dispatch(ActionCreators.unsetUser());
+  dispatch(Actions.unsetUser());
   await signout();
 };
 

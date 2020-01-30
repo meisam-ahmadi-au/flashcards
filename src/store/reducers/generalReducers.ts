@@ -6,20 +6,31 @@ export interface IGeneralAction {
 }
 
 export interface IGeneralState {
+  showDialogue: DialogueType | null;
   isLoading: boolean;
   hasError: boolean;
 }
 
 const initialState: IGeneralState = {
+  showDialogue: null,
   isLoading: false,
   hasError: false
 };
 
+export enum DialogueType {
+  DELETE = 'DELETE',
+  UPDATE = 'UPDATE',
+  MOVE = 'MOVE'
+}
+
 const generalReducer = (state = initialState, action: IGeneralAction) => {
-  if (action.type === actionTypes.IS_LOADING) {
-    return updateState(state, { isLoading: action.payload?.isLoading });
+  switch (action.type) {
+    case actionTypes.IS_LOADING:
+    case actionTypes.SHOW_DIALOGUE:
+      return updateState(state, action.payload);
+    default:
+      return state;
   }
-  return state;
 };
 
 export default generalReducer;

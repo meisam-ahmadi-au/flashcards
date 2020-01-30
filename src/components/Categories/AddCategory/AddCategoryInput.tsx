@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ActionCreators } from '../../../store/actions/actionTypes';
+import { Actions } from '../../../store/actions/actionTypes';
 import { addCategoryAndUpdate } from '../../../store/actions/categoriesActions';
 import { IReduxStates } from '../../../store/reducers/states';
 import { Modal } from '../../Portal/Portal';
@@ -15,7 +15,7 @@ const AddCategoryInput: React.FC = () => {
 
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
-    dispatch(ActionCreators.setCategory(value));
+    dispatch(Actions.setCategory(value));
   };
 
   const onAddCategory = async () => {

@@ -5,7 +5,8 @@ FROM node:10.17-alpine
 WORKDIR /web
 
 COPY ./package.json ./
-RUN npm install
+COPY ./yarn.lock ./
+RUN yarn install
 
 COPY ./ ./
 CMD ["npm", "start"]

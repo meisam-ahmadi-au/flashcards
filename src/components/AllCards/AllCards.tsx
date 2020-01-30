@@ -1,26 +1,24 @@
-import React from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import { RouteComponentProps } from 'react-router';
+import React, { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router';
 import { getAllCardsInCategory } from '../../store/actions/cardsActions';
 import { IReduxStates } from '../../store/reducers/states';
-import { ICard, IUpdateCard } from '../../util/interfaces';
+import { ICard } from '../../util/interfaces';
 import Styles from './AllCards.module.scss';
 import Card from './Card';
 
-const AllCards: React.FC<RouteComponentProps> = props => {
+const AllCards: React.FC = () => {
   const dispatch = useDispatch();
-  const { category } = props.match.params as { category: string };
-  const user = useSelector((s: IReduxStates) => s.auth.user);
-  const [allCards, setAllCards] = React.useState([] as ICard[]);
+  const allCards = useSelector((s: IReduxStates) => s.cards.cards);
+  const { category } = useParams();
   const [keyword, setKeyword] = React.useState('');
-  // const allCards = useSelector((s: IReduxStates) => s.cards.cards);
 
   const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
-    setKeyword(value.trim());
+    setKeyword(value.trimStart());
   };
 
-  const filteredCards = (cards: ICard[], searchTerm: string) => {
+  const filteredCards = useCallback((cards: ICard[], searchTerm: string) => {
     if (!searchTerm) {
       return cards;
     } else {
@@ -30,52 +28,29 @@ const AllCards: React.FC<RouteComponentProps> = props => {
           card.back.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-  };
-
-  // #region toBeDeleted
-  const deleteCard = (cardId: string) => {
-    const newCards = allCards.filter(card => card.cardId !== cardId);
-    setAllCards(newCards);
-  };
-
-  const updateCard = (updatedCard: IUpdateCard) => {
-    const newCards = allCards.map(card => {
-      if (card.cardId === updatedCard.cardId) {
-        return {
-          ...card,
-          ...updatedCard
-        };
-      } else {
-        return card;
-      }
-    });
-    setAllCards(newCards);
-  };
-  // #endregion
+  }, []);
 
   React.useEffect(() => {
-    dispatch(getAllCardsInCategory(category));
-  }, [user, category]);
+    if (category) {
+      dispatch(getAllCardsInCategory(category));
+    }
+  }, [dispatch, category]);
 
   return (
     <div className={Styles['all-cards']}>
-      <h3 className={Styles['all-cards__title']}>
-        {`All Cards in ${category}`}
-      </h3>
+      <div className={Styles['all-cards__title']}>
+        <h2>{`All Cards in ${category}`}</h2>
+        <h5>{allCards.length > 0 && `${allCards.length} cards`}</h5>
+      </div>
       <input
         className={Styles['all-cards__search']}
         type="text"
         onChange={changeHandler}
         placeholder="Search"
+        value={keyword}
       />
       {filteredCards(allCards, keyword).map(card => (
-        <Card
-          key={card.cardId}
-          {...card}
-          category={category}
-          deleteCard={deleteCard}
-          updateCard={updateCard}
-        />
+        <Card key={card.cardId} {...card} category={category} />
       ))}
     </div>
   );

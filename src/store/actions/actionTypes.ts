@@ -1,4 +1,5 @@
 import { User } from 'firebase';
+import { DialogueType } from '../reducers/generalReducers';
 import { ICard, ICategory } from './../../util/interfaces';
 
 const ActionTypes = {
@@ -9,12 +10,13 @@ const ActionTypes = {
   SET_USER: 'SET_USER',
   GET_USER_DATA: 'GET_USER_DATA',
   SIGN_OUT: 'SIGN_OUT',
-  IS_LOADING: 'IS_LOADING'
+  IS_LOADING: 'IS_LOADING',
+  SHOW_DIALOGUE: 'SHOW_DIALOGUE'
 };
 
 export default ActionTypes;
 
-export const ActionCreators = {
+export const Actions = {
   setUser: (user: User) => ({
     type: ActionTypes.SET_USER,
     payload: { user }
@@ -39,6 +41,10 @@ export const ActionCreators = {
     type: ActionTypes.SET_CARD,
     payload: { card }
   }),
+  unsetCard: () => ({
+    type: ActionTypes.SET_CARD,
+    payload: { card: null }
+  }),
   unsetCategory: () => ({
     type: ActionTypes.SET_CATEGORY,
     payload: { category: '' }
@@ -50,5 +56,13 @@ export const ActionCreators = {
   loaded: () => ({
     type: ActionTypes.IS_LOADING,
     payload: { isLoading: false }
+  }),
+  showDialogue: (showDialogue: DialogueType) => ({
+    type: ActionTypes.SHOW_DIALOGUE,
+    payload: { showDialogue }
+  }),
+  cancelDialogue: () => ({
+    type: ActionTypes.SHOW_DIALOGUE,
+    payload: { showDialogue: null }
   })
 };

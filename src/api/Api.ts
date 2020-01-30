@@ -40,7 +40,7 @@ const getCategoryDetailByCategoryName = async (
   return { ...categoriesSnapshot[0] };
 };
 
-const addCard = (uid: string, categoryId: string) => async (card: INewCard) =>
+const addCard = (uid: string, categoryId: number) => async (card: INewCard) =>
   await firestore.collection(`cards/${uid}/${categoryId}`).add(card);
 
 const updateCard = (uid: string, categoryId: string) => async (

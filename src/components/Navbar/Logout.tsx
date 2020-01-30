@@ -1,23 +1,16 @@
 import { User as FirebaseUser } from 'firebase';
 import React from 'react';
-import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { logout } from '../../store/actions/authActions';
+import { IReduxStates } from '../../store/reducers/states';
 import SvgIcons from '../SvgIcons/SvgIcons';
 
-interface IProps extends RouteComponentProps {
-  user: FirebaseUser | null;
-  logout: () => void;
-}
-
-const Logout = (props: IProps) => {
-  const user: null | FirebaseUser = props.user;
+const Logout = () => {
+  const dispatch = useDispatch();
+  const { user } = useSelector((s: IReduxStates) => s.auth);
   const displayName = user ? user!.displayName || user!.email : 'Friend';
-
-  const onLogout = () => {
-    props.logout();
-    props.history.push('/');
-  };
+  const onLogout = () => dispatch(logout());
 
   return (
     <div className="navbar__logout">
@@ -32,7 +25,4 @@ const Logout = (props: IProps) => {
   );
 };
 
-const mapStateToProps = (state: any) => ({
-  user: state.auth.user
-});
-export default connect(mapStateToProps, { logout })(withRouter(Logout));
+export default Logout;
