@@ -1,59 +1,51 @@
 import moment from 'moment';
-import React, { Component } from 'react';
-import { RouteComponentProps } from 'react-router';
-import Api from '../../api/Api';
-import { UsersContext } from '../../providers/UsersProvider';
-import { ICard } from '../../util/interfaces';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { IIntervalDeatilsWithQuality } from '../../util/superMemoII';
-import Spinner from '../Spinner/Spinner';
 import ReviewCard from './ReviewCard';
+import { useParams } from 'react-router-dom';
+import { useReduxSelector } from '../../store/reduxHelpers';
+import { ICard } from '../../util/interfaces';
+import {
+  retreiveTodaysCardsThunks,
+  updateReviewedCardThunk
+} from '../../store/actions/cardsActions';
+import { ThunkDispatch } from 'redux-thunk';
+import { IReduxStates } from '../../store/reducers/states';
+import { Action } from 'redux';
 
-export class Cards extends Component<RouteComponentProps> {
-  public state = {
-    cards: [] as ICard[],
-    activeCard: {} as ICard,
-    isLoading: true,
-    categoryId: ''
-  };
+const Cards: React.FC = () => {
+  const dispatch = useDispatch() as ThunkDispatch<
+    IReduxStates,
+    {},
+    Action<any>
+  >;
+  const { category } = useParams();
+  const { cards } = useReduxSelector().cards;
+  const [activeCard, setActiveCard] = useState();
+  const [cardsToReview, setCardsToReview] = useState([] as ICard[]);
 
-  public componentDidMount = async () => {
-    const { uid } = this.context;
-    const { category } = this.props.match.params as { category: string };
+  useEffect(() => {
+    if (category) {
+      dispatch(retreiveTodaysCardsThunks(category));
+    }
+  }, [category]);
 
-    const { categoryId } = await Api.getCategoryDetailByCategoryName(
-      uid,
-      category
-    );
+  useEffect(() => {
+    setActiveCard(cardsToReview[0]);
+  }, [cardsToReview.length]);
 
-    const cards = await Api.retreiveTodaysCardsByCategoryId(categoryId, uid);
+  useEffect(() => {
+    setCardsToReview(cards);
+  }, [cards]);
 
-    this.setState({
-      cards,
-      isLoading: false,
-      activeCard: cards[cards.length - 1],
-      categoryId
-    });
-  };
-
-  public updateCardInterval = async ({
+  const updateCardInterval = async ({
     repetitions,
     quality,
     easeFactor,
     interval
   }: IIntervalDeatilsWithQuality) => {
-    const { cards, categoryId } = this.state;
-    const { uid } = this.context;
-    const activeCard = {
-      ...this.state.activeCard,
-      cardId: this.state.activeCard.cardId!,
-      interval,
-      easeFactor,
-      repetitions
-    };
-
-    activeCard.shouldReadFront = !activeCard.shouldReadFront;
-
-    activeCard.nextReadTime = moment()
+    const nextReadTime = moment()
       .add(interval, 'days')
       .valueOf();
 
@@ -61,35 +53,40 @@ export class Cards extends Component<RouteComponentProps> {
     if (!Array.isArray(learningCurve)) {
       learningCurve = [activeCard.createdAt];
     }
-    activeCard.learningCurve = [...learningCurve, activeCard.nextReadTime];
+    learningCurve = [...learningCurve, activeCard.nextReadTime];
 
+    const activeCardUpdated = {
+      ...activeCard,
+      shouldReadFront: !activeCard.shouldReadFront,
+      learningCurve,
+      nextReadTime,
+      interval,
+      easeFactor,
+      repetitions
+    };
+
+    const newCardsToReview = [...cardsToReview];
     // if impossible
     if (quality === 0) {
-      cards.unshift(activeCard);
+      newCardsToReview.push(activeCardUpdated);
     }
 
-    await Api.updateCard(uid, categoryId)(activeCard);
+    await dispatch(updateReviewedCardThunk(activeCardUpdated));
 
-    cards.pop();
-    this.setState({ cards, activeCard: cards[cards.length - 1] });
+    const [a, ...restOfCards] = newCardsToReview;
+    setCardsToReview(restOfCards);
+    setActiveCard(restOfCards[0]);
   };
 
-  public render() {
-    const { isLoading, activeCard } = this.state;
+  return (
+    <div>
+      {cardsToReview.length ? (
+        <ReviewCard {...activeCard} updateCard={updateCardInterval} />
+      ) : (
+        <h4>All reviewed! Well done!</h4>
+      )}
+    </div>
+  );
+};
 
-    return (
-      <div>
-        {isLoading ? (
-          <Spinner />
-        ) : activeCard ? (
-          <ReviewCard {...activeCard} updateCard={this.updateCardInterval} />
-        ) : (
-          <h4>All reviewed! Well done!</h4>
-        )}
-      </div>
-    );
-  }
-}
-
-Cards.contextType = UsersContext;
 export default Cards;

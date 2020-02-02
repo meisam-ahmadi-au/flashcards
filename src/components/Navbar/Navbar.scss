@@ -8,6 +8,11 @@
   padding: 20px;
   background: #2b3648;
   color: white;
+  flex-flow: column-reverse;
+
+  @media only screen and (min-width: 768px) {
+    flex-flow: row;
+  }
 
   &__menu {
     padding: 0;
@@ -24,5 +29,17 @@
     color: white;
     font-weight: bold;
     text-decoration: none;
+  }
+
+  &__logout {
+    display: grid;
+    grid-template-columns: max-content 20px;
+    align-items: center;
+    grid-gap: 15px;
+
+    &--button {
+      fill: #ffc000;
+      stroke: #ffc000;
+    }
   }
 }

@@ -1,52 +1,28 @@
-import React from 'react';
-import Api from '../../api/Api';
-import { UsersContext } from '../../providers/UsersProvider';
-import { ICategory } from '../../util/interfaces';
-import AddCategory from './AddCategory';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllCategories } from '../../store/actions/categoriesActions';
+import { IReduxStates } from '../../store/reducers/states';
+import AddCategory from './AddCategory/AddCategory';
 import './Categories.scss';
 import Category from './Category';
 
-interface IState {
-  categories: ICategory[];
-}
-class DecksContainer extends React.Component<{}, IState> {
-  public state = {
-    categories: [] as ICategory[]
-  };
+const Categories = () => {
+  const dispatch = useDispatch();
+  const categories = useSelector((s: IReduxStates) => s.categories.categories);
 
-  public async componentDidMount() {
-    this.getAllCategories();
-  }
+  useEffect(() => {
+    dispatch(getAllCategories());
+  }, [dispatch]);
 
-  public getAllCategories = async () => {
-    const { uid } = this.context;
-    const allCategoriesSorted = await Api.getAllCategories(uid);
-    if (Array.isArray(allCategoriesSorted)) {
-      this.setState({ categories: [...allCategoriesSorted!] });
-    }
-  };
-
-  public render() {
-    const { categories } = this.state;
-    if (!categories) {
-      return;
-    }
-    return (
-      <div className="decks">
-        <AddCategory getAllCategories={this.getAllCategories} />
-        <div className="decks__container">
-          {categories.map(cat => (
-            <Category
-              {...cat}
-              key={cat.categoryId}
-              getAllCategories={this.getAllCategories}
-            />
-          ))}
-        </div>
+  return (
+    <div className="decks">
+      <AddCategory />
+      <div className="decks__container">
+        {categories &&
+          categories.map(cat => <Category {...cat} key={cat.categoryId} />)}
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
-DecksContainer.contextType = UsersContext;
-export default DecksContainer;
+export default Categories;

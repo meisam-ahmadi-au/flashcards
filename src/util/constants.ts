@@ -1,4 +1,6 @@
-export const LANDING = '/';
-export const ADD_CARD = '/categories/:category/addcard';
-export const CATEGORY = '/categories/:category';
-export const CATEGROIES = '/categories';
+export const routes = {
+  LANDING: '/',
+  ADD_CARD: '/categories/:category/addcard',
+  CATEGORY: '/categories/:category',
+  CATEGROIES: '/categories'
+};

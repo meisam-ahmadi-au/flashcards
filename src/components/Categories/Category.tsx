@@ -1,7 +1,8 @@
 import React, { SyntheticEvent } from 'react';
+import { useDispatch } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
-import Api from '../../api/Api';
 import flashcardImageSrc from '../../assets/flashcard.png';
+import { deleteCategoryAndUpdate } from '../../store/actions/categoriesActions';
 import { randomBackgroundColor } from '../../util/helpers';
 import SvgIcons from '../SvgIcons/SvgIcons';
 import styles from './Category.module.scss';
@@ -12,24 +13,22 @@ interface IProps extends RouteComponentProps {
   category: string;
   categoryId: number;
   createdAt: number;
-  getAllCategories: () => void;
 }
 
 const Category: React.FC<IProps> = props => {
-  const { totalNumberOfCards, category, history, getAllCategories } = props;
+  const { totalNumberOfCards, category, history } = props;
+  const dispatch = useDispatch();
 
   const goTo = (url: string) => (e: SyntheticEvent) => {
     e.stopPropagation();
     history.push(url);
   };
 
-  const deleteCategory = (categoryName: string) => async (
-    e: SyntheticEvent
-  ) => {
+  const deleteCategory = (categoryName: string) => (e: SyntheticEvent) => {
     e.stopPropagation();
-    await Api.deleteCategory(categoryName);
-    getAllCategories();
+    dispatch(deleteCategoryAndUpdate(categoryName));
   };
+
   return (
     <div
       className={styles.deck}

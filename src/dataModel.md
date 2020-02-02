@@ -33,7 +33,8 @@ firebase : {
       displayName,
       email,
       photoURL,
-      createdAt
+      createdAt,
+      uid
     }
 
   }

@@ -1,5 +1,3 @@
-import { RouteComponentProps } from 'react-router';
-
 export interface INewCard {
   front: string;
   back: string;
@@ -16,8 +14,6 @@ export interface ICard extends INewCard {
   cardId: string;
   category?: string;
   categoryId: string;
-  deleteCard: (a: string) => void;
-  updateCard: (a: IUpdateCard) => void;
 }
 export interface IReviewCard extends INewCard {
   repetitions: number;
@@ -26,7 +22,6 @@ export interface IReviewCard extends INewCard {
   cardId: string;
   category?: string;
   categoryId: string;
-  deleteCard: (a: string) => void;
   updateCard: (a: IIntervalDeatilsWithQuality) => void;
 }
 export interface IUpdateCard {
@@ -50,13 +45,6 @@ export interface ICategory {
   createdAt: number;
 }
 
-export interface IDeleteCard {
-  cardId: string;
-  category: string;
-  onCancel: () => void;
-  deleteCard: (a: string) => void;
-}
-
 export interface IAddOrUpdate {
   category: string;
   totalNumberOfCards: number;
@@ -66,7 +54,17 @@ export interface IAddOrUpdate {
   front?: string;
   back?: string;
 }
+export interface ICardInputForm {
+  submitHandler: (a: ICardSides) => void;
+  onCancel: () => void;
+  front?: string;
+  back?: string;
+}
 
+export interface ICardSides {
+  front: string;
+  back: string;
+}
 export interface IIntervalDetails {
   repetitions: number;
   interval: number;

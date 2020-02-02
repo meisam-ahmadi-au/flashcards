@@ -1,71 +1,49 @@
-import React, { Component, SyntheticEvent } from 'react';
-import { RouteComponentProps } from 'react-router';
-import Api from '../../api/Api';
-import { UsersContext } from '../../providers/UsersProvider';
-import AddOrUpdate from './AddOrUpdate';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useParams } from 'react-router';
+import { Actions } from '../../store/actions/actionTypes';
+import { addCardThunks } from '../../store/actions/cardsActions';
+import { getAllCategories } from '../../store/actions/categoriesActions';
+import { IReduxStates } from '../../store/reducers/states';
+import { ICardSides } from '../../util/interfaces';
+import CardInputForm from './CardInputForm';
 
-class AddCards extends Component<RouteComponentProps> {
-  public state = {
-    front: '',
-    back: '',
-    category: '',
-    totalNumberOfCards: 0,
-    categoryId: ''
+const AddCards: React.FC = () => {
+  const dispatch = useDispatch();
+  const { category: categoryName } = useParams();
+  const history = useHistory();
+  const category = useSelector(
+    (s: IReduxStates) => s.categories.categories
+  ).find(cat => cat.category === categoryName);
+
+  const cancelHandler = () => {
+    dispatch(Actions.unsetCategory());
+    history.goBack();
   };
 
-  public componentDidMount = async () => {
-    const { category } = this.props.match.params as { category: string };
-    const user = this.context as firebase.User;
-    const {
-      categoryId,
-      totalNumberOfCards
-    } = await Api.getCategoryDetailByCategoryName(user.uid, category);
-    this.setState({ category, totalNumberOfCards, categoryId });
-  };
-
-  public onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.currentTarget;
-    this.setState({ [name]: value });
-  };
-
-  public addCard = async (e: SyntheticEvent) => {
-    e.preventDefault();
-    const user = this.context as firebase.User;
-    const { front, back, categoryId } = this.state;
-
-    if (front && back && categoryId) {
-      const createdAt = Date.now();
-      const newCard = {
-        front,
-        back,
-        createdAt,
-        nextReadTime: createdAt,
-        shouldReadFront: true,
-        learningCurve: [createdAt]
-      };
-
-      await Api.addCard(user.uid, categoryId)(newCard).catch(console.log);
-      this.setState({ front: '', back: '' });
+  useEffect(() => {
+    if (categoryName && !category) {
+      dispatch(getAllCategories());
     }
-  };
+  }, []);
 
-  public goBack = () => {
-    this.props.history.goBack();
-  };
+  const addCard = async (newCard: ICardSides) =>
+    dispatch(addCardThunks(category!.categoryId, newCard));
 
-  public render() {
-    const { category, totalNumberOfCards, front, back } = this.state;
-    const addProps = { category, totalNumberOfCards, front, back };
-    return (
-      <AddOrUpdate
-        {...addProps}
-        onSubmit={this.addCard}
-        onCancel={this.goBack}
-        onInputChange={this.onInputChange}
+  return (
+    <div>
+      <div>
+        <h2>{categoryName}</h2>
+        <h5>{category && `${category!.totalNumberOfCards} cards`}</h5>
+      </div>
+      <CardInputForm
+        onCancel={cancelHandler}
+        submitHandler={addCard}
+        front=""
+        back=""
       />
-    );
-  }
-}
+    </div>
+  );
+};
 
-AddCards.contextType = UsersContext;
 export default AddCards;

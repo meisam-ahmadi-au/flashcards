@@ -1,5 +1,6 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import './App.css';
 import AddCard from './components/AddCard/AddCard';
 import AllCards from './components/AllCards/AllCards';
@@ -7,16 +8,25 @@ import Cards from './components/Cards/Cards';
 import Categories from './components/Categories/Categories';
 import Home from './components/Home/Home';
 import Navbar from './components/Navbar/Navbar';
-import { UsersContext } from './providers/UsersProvider';
+import { Modal } from './components/Portal/Portal';
+import ShowIf from './components/ShowIf/ShowIf';
+import Spinner from './components/Spinner/Spinner';
+import { IReduxStates } from './store/reducers/states';
 
-const App: React.FC = () => {
-  const isAuthenticated = React.useContext(UsersContext);
+const App: React.FC = props => {
+  const isLoading = useSelector((s: IReduxStates) => s.general.isLoading);
   return (
     <div className="app">
+      {isLoading && (
+        <Modal>
+          <Spinner />
+        </Modal>
+      )}
       <Navbar />
       <div className="app__body">
-        {isAuthenticated ? (
-          <>
+        <Switch>
+          <Route exact={true} path="/" component={Home} />
+          <ShowIf.Logged>
             <Route
               exact={true}
               path="/categories/:category/addcard"
@@ -24,19 +34,20 @@ const App: React.FC = () => {
             />
             <Route
               exact={true}
-              path="/categories/:category"
-              component={Cards}
-            />
-            <Route
-              exact={true}
               path="/categories/:category/allcards"
               component={AllCards}
             />
+            <Route
+              exact={true}
+              path="/categories/:category"
+              component={Cards}
+            />
             <Route exact={true} path="/categories" component={Categories} />
-          </>
-        ) : null}
-        <Route path="/" exact={true} component={Home} />
-        {/* <Redirect to="/" /> */}
+          </ShowIf.Logged>
+          <Route path="/:anythingelse">
+            <Redirect to="/" />
+          </Route>
+        </Switch>
       </div>
     </div>
   );

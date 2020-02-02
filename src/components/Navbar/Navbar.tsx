@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Authenticate from '../Authenticate/Authenticate';
-
+import ShowIf from '../ShowIf/ShowIf';
+import Logout from './Logout';
 import './Navbar.scss';
 
 const Navbar = () => {
@@ -24,7 +24,9 @@ const Navbar = () => {
           </Link>
         </li>
       </ul>
-      <Authenticate />
+      <ShowIf.Logged>
+        <Logout />
+      </ShowIf.Logged>
     </nav>
   );
 };

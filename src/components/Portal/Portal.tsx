@@ -3,22 +3,18 @@ import ReactDOM from 'react-dom';
 import styles from './Portal.module.scss';
 
 const modalRoot = document.getElementById('portal')!;
-export class PortalContainer extends React.Component {
-  public el = document.createElement('div');
+const PortalContainer: React.FC = ({ children }) => {
+  const el = document.createElement('div');
 
-  public componentDidMount() {
-    // this.el.classList.add(styles.portal);
-    modalRoot.appendChild(this.el);
-  }
+  React.useEffect(() => {
+    modalRoot.appendChild(el);
+    return () => {
+      modalRoot.removeChild(el);
+    };
+  }, [el]);
 
-  public componentWillUnmount() {
-    modalRoot.removeChild(this.el);
-  }
-
-  public render() {
-    return ReactDOM.createPortal(this.props.children, this.el);
-  }
-}
+  return ReactDOM.createPortal(children, el);
+};
 
 export const Modal: React.FC<{ onClick?: () => void }> = ({
   children,
@@ -32,12 +28,3 @@ export const Modal: React.FC<{ onClick?: () => void }> = ({
     </PortalContainer>
   );
 };
-
-// export const Notification = () => {
-//   return (
-//     <div>
-
-//     </div>
-//   )
-// }
-
