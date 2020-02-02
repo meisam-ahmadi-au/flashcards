@@ -1,13 +1,19 @@
-import { Dispatch } from 'redux';
 import Api from '../../api/Api';
-import { ICardSides } from './../../util/interfaces';
+import { ICardSides, IUpdateCard } from './../../util/interfaces';
 import { IReduxStates } from './../reducers/states';
 import { Actions } from './actionTypes';
+import { getAllCategories } from './categoriesActions';
+import { ThunkAction } from 'redux-thunk';
 
-export const getAllCardsInCategory = (category: string) => async (
-  dispatch: Dispatch<any>,
-  getState: () => IReduxStates
-) => {
+type Action = { type: string; payload?: any };
+
+type ThunkDispatchPromise = (
+  ...a: any
+) => ThunkAction<Promise<any>, IReduxStates, {}, Action>;
+
+export const getAllCardsInCategory: ThunkDispatchPromise = (
+  category: string
+) => async (dispatch, getState) => {
   const user = getState().auth.user;
   dispatch(Actions.loading());
   const cards = await Api.getAllCardsInCategory(user.uid, category);
@@ -15,9 +21,9 @@ export const getAllCardsInCategory = (category: string) => async (
   dispatch(Actions.loaded());
 };
 
-export const deleteCard = () => async (
-  dispatch: Dispatch<any>,
-  getState: () => IReduxStates
+export const deleteCard: ThunkDispatchPromise = () => async (
+  dispatch,
+  getState
 ) => {
   const { cardId, category } = getState().cards.card;
   dispatch(Actions.loading());
@@ -31,10 +37,9 @@ export const deleteCard = () => async (
   dispatch(Actions.unsetCard());
 };
 
-export const updateCardThunk = (updatedCard: ICardSides) => async (
-  dispatch: Dispatch<any>,
-  getState: () => IReduxStates
-) => {
+export const updateCardThunks: ThunkDispatchPromise = (
+  updatedCard: ICardSides
+) => async (dispatch, getState) => {
   dispatch(Actions.loading());
   const { user } = getState().auth;
   const { categoryId, front, back, cardId } = getState().cards.card;
@@ -58,10 +63,10 @@ export const updateCardThunk = (updatedCard: ICardSides) => async (
   dispatch(Actions.unsetCard());
 };
 
-export const addCardThunk = (
+export const addCardThunks: ThunkDispatchPromise = (
   categoryId: number,
   { front, back }: ICardSides
-) => async (dispatch: Dispatch<any>, getState: () => IReduxStates) => {
+) => async (dispatch, getState) => {
   dispatch(Actions.loading());
   const { uid } = getState().auth.user;
   const createdAt = Date.now();
@@ -75,4 +80,50 @@ export const addCardThunk = (
   };
   await Api.addCard(uid, categoryId)(newCard).catch(console.log);
   dispatch(Actions.loaded());
+};
+
+export const retreiveTodaysCardsThunks: ThunkDispatchPromise = (
+  category: string
+) => async (dispatch, getState) => {
+  dispatch(Actions.setCategory(category));
+  if (!getState().categories.categories.length) {
+    await dispatch(getAllCategories());
+  }
+
+  const {
+    auth: {
+      user: { uid }
+    },
+    categories: { categories }
+  } = getState();
+
+  const categoryId = categories.find(cat => cat.category === category)
+    ?.categoryId;
+
+  if (categoryId) {
+    dispatch(Actions.loading());
+    const cards = await Api.retreiveTodaysCardsByCategoryId(categoryId, uid);
+    dispatch(Actions.setCards(cards));
+    dispatch(Actions.loaded());
+  }
+};
+
+export const updateReviewedCardThunk: ThunkDispatchPromise = (
+  updatedCard: IUpdateCard
+) => async (dispatch, getState) => {
+  const {
+    auth: {
+      user: { uid }
+    },
+    categories: { categories, category }
+  } = getState();
+
+  const categoryId = categories.find(cat => cat.category === category)
+    ?.categoryId;
+
+  dispatch(Actions.loading());
+  if (categoryId) await Api.updateCard(uid, categoryId)(updatedCard);
+  dispatch(Actions.loaded());
+
+  return Promise.resolve();
 };

@@ -8,6 +8,11 @@
   padding: 20px;
   background: #2b3648;
   color: white;
+  flex-flow: column-reverse;
+
+  @media only screen and (min-width: 768px) {
+    flex-flow: row;
+  }
 
   &__menu {
     padding: 0;

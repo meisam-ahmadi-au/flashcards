@@ -1,7 +1,7 @@
 import React, { SyntheticEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Actions } from '../../store/actions/actionTypes';
-import { updateCardThunk } from '../../store/actions/cardsActions';
+import { updateCardThunks } from '../../store/actions/cardsActions';
 import { IReduxStates } from '../../store/reducers/states';
 import { ICardSides } from '../../util/interfaces';
 import CardInputForm from '../AddCard/CardInputForm';
@@ -11,7 +11,7 @@ const UpdateCard: React.FC = () => {
   const stopPropagation = (e: SyntheticEvent) => e.stopPropagation();
   const { front, back } = useSelector((s: IReduxStates) => s.cards.card);
 
-  const submitHandler = (card: ICardSides) => dispatch(updateCardThunk(card));
+  const submitHandler = (card: ICardSides) => dispatch(updateCardThunks(card));
   const cancelDialogue = () => dispatch(Actions.cancelDialogue());
 
   return (

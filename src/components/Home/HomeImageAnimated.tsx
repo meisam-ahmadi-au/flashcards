@@ -7,7 +7,11 @@ import Styles from './HomeImageAnimated.module.scss';
 const HomeImageAnimated = () => {
   return (
     <div className={Styles['home-image']}>
-      <img src={loginImage} alt="Login" />
+      <img
+        src={loginImage}
+        alt="Login"
+        className={Styles['home-image__hero']}
+      />
       <img
         src={flascardImage}
         alt="flashcard"

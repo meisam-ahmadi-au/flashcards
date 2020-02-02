@@ -1,12 +1,18 @@
 import { Dispatch } from 'react';
 import Api from '../../api/Api';
-import { IAction } from '../reducers/categoriesReducers';
 import { IReduxStates } from './../reducers/states';
 import { Actions } from './actionTypes';
+import { ThunkDispatch, ThunkAction } from 'redux-thunk';
 
-export const getAllCategories = () => async (
-  dispatch: Dispatch<any>,
-  getState: () => IReduxStates
+type Action = { type: string; payload?: any };
+
+type ThunkDispatchPromise = (
+  a?: any
+) => ThunkAction<Promise<any>, IReduxStates, {}, Action>;
+
+export const getAllCategories: ThunkDispatchPromise = () => async (
+  dispatch,
+  getState
 ) => {
   dispatch(Actions.loading());
   const categories = await Api.getAllCategories(getState().auth.user.uid);
@@ -14,6 +20,8 @@ export const getAllCategories = () => async (
     dispatch(Actions.setCategories(categories));
   }
   dispatch(Actions.loaded());
+
+  return Promise.resolve();
 };
 
 export const deleteCategoryAndUpdate = (category: string) => async (

@@ -69,6 +69,8 @@ export const logout = () => async (dispatch: any) => {
   }
 
   dispatch(Actions.unsetUser());
+  dispatch(Actions.unsetCategory());
+  dispatch(Actions.unsetCard());
   await signout();
 };
 

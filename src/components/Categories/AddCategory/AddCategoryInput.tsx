@@ -3,8 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Actions } from '../../../store/actions/actionTypes';
 import { addCategoryAndUpdate } from '../../../store/actions/categoriesActions';
 import { IReduxStates } from '../../../store/reducers/states';
-import { Modal } from '../../Portal/Portal';
-import Spinner from '../../Spinner/Spinner';
 
 const AddCategoryInput: React.FC = () => {
   const dispatch = useDispatch();
@@ -27,12 +25,6 @@ const AddCategoryInput: React.FC = () => {
 
   return (
     <div>
-      {isLoading && (
-        <Modal>
-          <Spinner />
-        </Modal>
-      )}
-
       <input
         type="text"
         name="category"

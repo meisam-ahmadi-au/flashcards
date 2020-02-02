@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router';
 import { Actions } from '../../store/actions/actionTypes';
-import { addCardThunk } from '../../store/actions/cardsActions';
+import { addCardThunks } from '../../store/actions/cardsActions';
 import { getAllCategories } from '../../store/actions/categoriesActions';
 import { IReduxStates } from '../../store/reducers/states';
 import { ICardSides } from '../../util/interfaces';
@@ -28,7 +28,7 @@ const AddCards: React.FC = () => {
   }, []);
 
   const addCard = async (newCard: ICardSides) =>
-    dispatch(addCardThunk(category!.categoryId, newCard));
+    dispatch(addCardThunks(category!.categoryId, newCard));
 
   return (
     <div>

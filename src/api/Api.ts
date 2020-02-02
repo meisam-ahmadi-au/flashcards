@@ -3,10 +3,10 @@ import {
   firestore,
   functions
 } from '../components/FirebaseAuthentication/FirebaseAuthentication';
-import { ICategory, INewCard, IUpdateCard } from '../util/interfaces';
+import { ICategory, INewCard, IUpdateCard, ICard } from '../util/interfaces';
 
 const retreiveTodaysCardsByCategoryId = async (
-  categoryId: string,
+  categoryId: number,
   uid: string
 ) => {
   const startOfToday = moment()
@@ -22,7 +22,7 @@ const retreiveTodaysCardsByCategoryId = async (
   const cardsSnapshot = cardsRef.docs.map(doc => ({
     ...doc.data(),
     cardId: doc.id
-  }));
+  })) as ICard[];
 
   return [...cardsSnapshot];
 };
@@ -40,15 +40,18 @@ const getCategoryDetailByCategoryName = async (
   return { ...categoriesSnapshot[0] };
 };
 
-const addCard = (uid: string, categoryId: number) => async (card: INewCard) =>
-  await firestore.collection(`cards/${uid}/${categoryId}`).add(card);
+const addCard = (uid: string | number, categoryId: number) => async (
+  card: INewCard
+) => await firestore.collection(`cards/${uid}/${categoryId}`).add(card);
 
-const updateCard = (uid: string, categoryId: string) => async (
-  updatedCard: IUpdateCard
-) =>
+const updateCard = (
+  uid: string | number,
+  categoryId: string | number
+) => async (updatedCard: IUpdateCard) => {
   await firestore
     .doc(`cards/${uid}/${categoryId}/${updatedCard.cardId}`)
     .update(updatedCard);
+};
 
 const getAllCategories = async (uid: string) => {
   const categoriesCollection = await firestore

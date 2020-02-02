@@ -15,7 +15,6 @@ import { IReduxStates } from './store/reducers/states';
 
 const App: React.FC = props => {
   const isLoading = useSelector((s: IReduxStates) => s.general.isLoading);
-  console.log({ props });
   return (
     <div className="app">
       {isLoading && (
@@ -25,24 +24,30 @@ const App: React.FC = props => {
       )}
       <Navbar />
       <div className="app__body">
-        <Route exact={true} path="/" component={Home} />
-        <ShowIf.Logged>
-          <Route
-            exact={true}
-            path="/categories/:category/addcard"
-            component={AddCard}
-          />
-          <Route
-            exact={true}
-            path="/categories/:category/allcards"
-            component={AllCards}
-          />
-          <Route exact={true} path="/categories/:category" component={Cards} />
-          <Route exact={true} path="/categories" component={Categories} />
-        </ShowIf.Logged>
-        <Route path="/:anythingelse">
-          <Redirect to="/" />
-        </Route>
+        <Switch>
+          <Route exact={true} path="/" component={Home} />
+          <ShowIf.Logged>
+            <Route
+              exact={true}
+              path="/categories/:category/addcard"
+              component={AddCard}
+            />
+            <Route
+              exact={true}
+              path="/categories/:category/allcards"
+              component={AllCards}
+            />
+            <Route
+              exact={true}
+              path="/categories/:category"
+              component={Cards}
+            />
+            <Route exact={true} path="/categories" component={Categories} />
+          </ShowIf.Logged>
+          <Route path="/:anythingelse">
+            <Redirect to="/" />
+          </Route>
+        </Switch>
       </div>
     </div>
   );

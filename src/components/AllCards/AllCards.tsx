@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { getAllCardsInCategory } from '../../store/actions/cardsActions';
@@ -18,17 +18,20 @@ const AllCards: React.FC = () => {
     setKeyword(value.trimStart());
   };
 
-  const filteredCards = useCallback((cards: ICard[], searchTerm: string) => {
-    if (!searchTerm) {
-      return cards;
-    } else {
-      return cards.filter(
-        card =>
-          card.front.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          card.back.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-  }, []);
+  const filteredCards = React.useCallback(
+    (cards: ICard[], searchTerm: string) => {
+      if (!searchTerm) {
+        return cards;
+      } else {
+        return cards.filter(
+          card =>
+            card.front.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            card.back.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      }
+    },
+    []
+  );
 
   React.useEffect(() => {
     if (category) {

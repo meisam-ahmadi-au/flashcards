@@ -7,13 +7,11 @@ export interface ICardsAction {
 }
 
 export interface ICardsState {
-  searchTerms: string;
   cards: ICard[];
   card: ICard;
 }
 
 const initialState: ICardsState = {
-  searchTerms: '',
   cards: [] as ICard[],
   card: {} as ICard
 };
