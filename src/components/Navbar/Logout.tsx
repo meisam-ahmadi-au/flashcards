@@ -1,7 +1,5 @@
-import { User as FirebaseUser } from 'firebase';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 import { logout } from '../../store/actions/authActions';
 import { IReduxStates } from '../../store/reducers/states';
 import SvgIcons from '../SvgIcons/SvgIcons';

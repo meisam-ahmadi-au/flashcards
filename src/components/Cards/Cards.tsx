@@ -29,11 +29,11 @@ const Cards: React.FC = () => {
     if (category) {
       dispatch(retreiveTodaysCardsThunks(category));
     }
-  }, [category]);
+  }, [category, dispatch]);
 
   useEffect(() => {
     setActiveCard(cardsToReview[0]);
-  }, [cardsToReview.length]);
+  }, [cardsToReview, cardsToReview.length]);
 
   useEffect(() => {
     setCardsToReview(cards);
@@ -72,8 +72,8 @@ const Cards: React.FC = () => {
     }
 
     await dispatch(updateReviewedCardThunk(activeCardUpdated));
-
-    const [a, ...restOfCards] = newCardsToReview;
+    // ignoring first element and getting the rest
+    const [, ...restOfCards] = newCardsToReview;
     setCardsToReview(restOfCards);
     setActiveCard(restOfCards[0]);
   };

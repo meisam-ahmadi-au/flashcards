@@ -27,7 +27,7 @@ const CardInputForm: React.FC<ICardInputForm> = ({
     if (prevIsLoading && !isLoading) {
       setNewCard({ front: '', back: '' });
     }
-  }, [isLoading]);
+  }, [isLoading, prevIsLoading]);
 
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;

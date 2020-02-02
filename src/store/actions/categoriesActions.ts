@@ -2,7 +2,7 @@ import { Dispatch } from 'react';
 import Api from '../../api/Api';
 import { IReduxStates } from './../reducers/states';
 import { Actions } from './actionTypes';
-import { ThunkDispatch, ThunkAction } from 'redux-thunk';
+import { ThunkAction } from 'redux-thunk';
 
 type Action = { type: string; payload?: any };
 
@@ -41,11 +41,9 @@ export const addCategoryAndUpdate = (category: string) => async (
   dispatch(getAllCategories());
 };
 
-export const getCategoryByCategoryName = (categoryName: string) => async (
-  dispatch: Dispatch<any>,
-  getState: () => IReduxStates
-) => {
-  const { uid } = getState().auth.user;
+export const getCategoryByCategoryName: ThunkDispatchPromise = (
+  categoryName: string
+) => async dispatch => {
   dispatch(Actions.loading());
   dispatch(getAllCategories());
 };
