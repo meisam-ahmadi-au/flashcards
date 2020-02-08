@@ -8,7 +8,8 @@ export interface IAction {
 
 const initialState: ICategoriesState = {
   categories: [],
-  category: ''
+  category: '',
+  categoryId: ''
 };
 
 const categoriesReducers = (state = initialState, action: IAction) => {

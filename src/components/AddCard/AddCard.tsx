@@ -25,7 +25,7 @@ const AddCards: React.FC = () => {
     if (categoryName && !category) {
       dispatch(getAllCategories());
     }
-  });
+  }, [dispatch, categoryName, category]);
 
   const addCard = async (newCard: ICardSides) =>
     dispatch(addCardThunks(category!.categoryId, newCard));

@@ -18,11 +18,13 @@ const store = createStore(reducer, composeEnhancers(applyMiddleware(thunk)));
 store.dispatch(subscribeToAuth());
 
 const index = (
-  <BrowserRouter>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </BrowserRouter>
+  <React.StrictMode>
+    <BrowserRouter>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </BrowserRouter>
+  </React.StrictMode>
 );
 
 ReactDOM.render(index, document.getElementById('root'));

@@ -1,0 +1,16 @@
+.badges {
+  min-width: 30px;
+  padding: 0 5px;
+  background: black;
+  display: inline-block;
+
+  &__svg {
+    width: 12px;
+  }
+
+  &__badge {
+    margin: 0;
+    color: white;
+    font-weight: bold;
+  }
+}

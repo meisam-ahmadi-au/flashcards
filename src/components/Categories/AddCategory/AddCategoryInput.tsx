@@ -1,26 +1,24 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Actions } from '../../../store/actions/actionTypes';
 import { addCategoryAndUpdate } from '../../../store/actions/categoriesActions';
 import { IReduxStates } from '../../../store/reducers/states';
 
 const AddCategoryInput: React.FC = () => {
   const dispatch = useDispatch();
-  const { isLoading, category } = useSelector((state: IReduxStates) => ({
-    isLoading: state.general.isLoading,
-    category: state.categories.category
-  }));
+  const { isLoading } = useSelector((s: IReduxStates) => s.general);
+  const [category, setCategory] = React.useState('');
 
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.currentTarget;
-    dispatch(Actions.setCategory(value));
+    const value = event.currentTarget.value.trimStart();
+    setCategory(value);
   };
 
   const onAddCategory = async () => {
     if (!category) {
       return false;
     }
-    dispatch(addCategoryAndUpdate(category));
+    await dispatch(addCategoryAndUpdate(category));
+    setCategory('');
   };
 
   return (

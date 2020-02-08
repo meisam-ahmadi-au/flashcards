@@ -3,7 +3,7 @@ import {
   firestore,
   functions
 } from '../components/FirebaseAuthentication/FirebaseAuthentication';
-import { ICategory, INewCard, IUpdateCard, ICard } from '../util/interfaces';
+import { INewCard, IUpdateCard, ICard } from '../util/interfaces';
 
 const retreiveTodaysCardsByCategoryId = async (
   categoryId: number,
@@ -54,23 +54,9 @@ const updateCard = (
 };
 
 const getAllCategories = async (uid: string) => {
-  const categoriesCollection = await firestore
-    .doc(`otherInfo/${uid}`)
-    .collection(`categories`)
-    .get()
-    .catch(console.log);
-
-  if (!categoriesCollection) {
-    return;
-  }
-  const allCategories = categoriesCollection.docs.map(doc =>
-    doc.data()
-  ) as ICategory[];
-
-  const allCategoriesSorted = allCategories.sort((catA, catB) =>
-    catA.category > catB.category ? 1 : -1
-  );
-
+  const { data: allCategoriesSorted } = await functions.httpsCallable(
+    'getAllCategories'
+  )();
   return allCategoriesSorted;
 };
 
@@ -91,6 +77,14 @@ const deleteCard = async (category: string, cardId: string) =>
 const deleteCategory = async (category: string) =>
   functions.httpsCallable('deleteCategory')({ category });
 
+const updateCategory = (oldCategoryName: string) => async (
+  newCategoryName: string
+) =>
+  functions.httpsCallable('updateCategory')({
+    oldCategoryName,
+    newCategoryName
+  });
+
 export default {
   retreiveTodaysCardsByCategoryId,
   getCategoryDetailByCategoryName,
@@ -100,5 +94,6 @@ export default {
   getAllCardsInCategory,
   addCategory,
   deleteCard,
-  deleteCategory
+  deleteCategory,
+  updateCategory
 };

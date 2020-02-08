@@ -1,4 +1,3 @@
-const classNames = (...args: string[]) => args.join(" ");
-
+const classNames = (...args: string[]) => args.join(' ');
 
 export default classNames;

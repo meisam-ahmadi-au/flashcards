@@ -1,0 +1,39 @@
+.update-category {
+  background: #fcfaf2;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: 20px;
+  column-gap: 20px;
+
+  &__title {
+    grid-column: 1/-1;
+    margin: 0;
+  }
+
+  input {
+    grid-column: 1/-1;
+    border: none;
+    border-bottom: 1px solid grey;
+  }
+
+  p {
+    grid-column: 1/-1;
+    margin-top: -20px;
+    color: red;
+  }
+
+  .hide {
+    opacity: 0;
+  }
+
+  &__error {
+    opacity: 1;
+  }
+
+  button {
+    border: none;
+    background: #006effa1;
+    padding: 10px 0;
+  }
+}

@@ -10,6 +10,7 @@ export interface IAuthState {
 export interface ICategoriesState {
   categories: ICategory[];
   category: string;
+  categoryId: string;
 }
 export interface IAllStates extends ICategoriesState, IAuthState, ICardsState {}
 export interface IReduxStates {

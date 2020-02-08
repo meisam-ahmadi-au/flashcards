@@ -1,23 +1,34 @@
 import React, { SyntheticEvent } from 'react';
 import { useDispatch } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
 import flashcardImageSrc from '../../assets/flashcard.png';
 import { deleteCategoryAndUpdate } from '../../store/actions/categoriesActions';
 import { randomBackgroundColor } from '../../util/helpers';
 import SvgIcons from '../SvgIcons/SvgIcons';
 import styles from './Category.module.scss';
+import CategoryBadges from './CategoryBadges';
+import { useHistory } from 'react-router-dom';
+import { Actions } from '../../store/actions/actionTypes';
 
-interface IProps extends RouteComponentProps {
+interface IProps {
   totalNumberOfCards: number;
   tags: string;
   category: string;
   categoryId: number;
   createdAt: number;
+  numberOfUnreviewedCards: number;
+  categoryUpdate: () => void;
 }
 
 const Category: React.FC<IProps> = props => {
-  const { totalNumberOfCards, category, history } = props;
+  const {
+    numberOfUnreviewedCards,
+    totalNumberOfCards,
+    category,
+    categoryUpdate
+  } = props;
+
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const goTo = (url: string) => (e: SyntheticEvent) => {
     e.stopPropagation();
@@ -29,18 +40,31 @@ const Category: React.FC<IProps> = props => {
     dispatch(deleteCategoryAndUpdate(categoryName));
   };
 
+  const editCategory = (e: SyntheticEvent) => {
+    e.stopPropagation();
+    dispatch(Actions.setCategory(category));
+    categoryUpdate();
+  };
+
   return (
     <div
       className={styles.deck}
       title={category}
       onClick={goTo(`/categories/${category}`)}
     >
-      <img
-        style={randomBackgroundColor()}
-        src={flashcardImageSrc}
-        alt={category}
-        className={styles.deck__image}
-      />
+      <div>
+        <img
+          style={randomBackgroundColor()}
+          src={flashcardImageSrc}
+          alt={category}
+          className={styles.deck__image}
+        />
+        <CategoryBadges
+          numberOfUnreviewedCards={numberOfUnreviewedCards}
+          totalNumberOfCards={totalNumberOfCards}
+          className={styles.deck__badges}
+        />
+      </div>
       <h4 className={styles.deck__name}>{category}</h4>
       <div className={styles.deck__extras}>
         <span
@@ -51,6 +75,7 @@ const Category: React.FC<IProps> = props => {
           iconId="edit"
           strokeWidth="0"
           title="edit"
+          onClick={editCategory}
         />
 
         <SvgIcons
@@ -79,4 +104,4 @@ const Category: React.FC<IProps> = props => {
   );
 };
 
-export default withRouter(Category);
+export default Category;

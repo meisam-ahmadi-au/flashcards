@@ -43,6 +43,7 @@ export interface ICategory {
   category: string;
   categoryId: number;
   createdAt: number;
+  numberOfUnreviewedCards: number;
 }
 
 export interface IAddOrUpdate {

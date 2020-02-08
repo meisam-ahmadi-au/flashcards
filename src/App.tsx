@@ -13,12 +13,13 @@ import ShowIf from './components/ShowIf/ShowIf';
 import Spinner from './components/Spinner/Spinner';
 import { IReduxStates } from './store/reducers/states';
 
-const App: React.FC = props => {
+const App: React.FC = () => {
   const isLoading = useSelector((s: IReduxStates) => s.general.isLoading);
+
   return (
     <div className="app">
       {isLoading && (
-        <Modal>
+        <Modal zIndex={10}>
           <Spinner />
         </Modal>
       )}

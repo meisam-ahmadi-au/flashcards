@@ -27,6 +27,7 @@ export const getAllCategories: ThunkDispatchPromise = () => async (
 export const deleteCategoryAndUpdate = (category: string) => async (
   dispatch: Dispatch<any>
 ) => {
+  dispatch(Actions.loading());
   await Api.deleteCategory(category);
   dispatch(getAllCategories());
 };
@@ -36,9 +37,10 @@ export const addCategoryAndUpdate = (category: string) => async (
 ) => {
   dispatch(Actions.loading());
   await Api.addCategory(category).catch(console.log);
-  dispatch(Actions.unsetCategory());
+  await dispatch(getAllCategories());
   dispatch(Actions.loaded());
-  dispatch(getAllCategories());
+
+  return Promise.resolve();
 };
 
 export const getCategoryByCategoryName: ThunkDispatchPromise = (
@@ -46,4 +48,22 @@ export const getCategoryByCategoryName: ThunkDispatchPromise = (
 ) => async dispatch => {
   dispatch(Actions.loading());
   dispatch(getAllCategories());
+};
+
+export const updateCategoryThunk: ThunkDispatchPromise = (
+  newCategoryName: string
+) => async (dispatch, getState) => {
+  const { category, categories } = getState().categories;
+  dispatch(Actions.loading());
+  await Api.updateCategory(category)(newCategoryName);
+  dispatch(Actions.cancelDialogue());
+  const newCategories = categories.map(cat => {
+    if (cat.category.trim().toLowerCase() === category.trim().toLowerCase()) {
+      cat.category = newCategoryName.trim();
+    }
+    return cat;
+  });
+
+  dispatch(Actions.setCategories(newCategories));
+  dispatch(Actions.loaded());
 };

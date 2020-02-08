@@ -29,6 +29,10 @@ export const Actions = {
     type: ActionTypes.SET_CATEGORIES,
     payload: { categories }
   }),
+  unsetCategories: () => ({
+    type: ActionTypes.SET_CATEGORIES,
+    payload: null
+  }),
   setCategory: (category: string) => ({
     type: ActionTypes.SET_CATEGORY,
     payload: { category }
