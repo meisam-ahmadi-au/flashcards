@@ -2,11 +2,12 @@
 
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
-// import * as moment from 'moment';
+import * as moment from 'moment';
 
 admin.initializeApp();
 const firestore = admin.firestore();
 
+// #region users
 export const createUserProfile = functions.auth.user().onCreate(async user => {
   const userRef = await firestore.doc(`users/${user.uid}`);
   const userSnapshot = await userRef.get();
@@ -20,6 +21,7 @@ export const createUserProfile = functions.auth.user().onCreate(async user => {
       .catch(err => console.log(err));
   }
 });
+// #endregion
 
 export const updateCardsCountOnCreate = functions.firestore
   .document(`cards/{userId}/{categoryId}/{cardId}`)
@@ -51,17 +53,25 @@ export const addCategory = functions.https.onCall(
   async ({ category }: { category: string }, context) => {
     const uid = context.auth!.uid;
     const categoriesRef = firestore.collection(`otherInfo/${uid}/categories`);
-    const newCategorySnapshot = await categoriesRef
-      .where('category', '==', category.toLowerCase())
-      .get();
 
-    if (newCategorySnapshot.empty) {
+    const newCategorySnapshot = await categoriesRef.get();
+    let categoryExists = false;
+    if (!newCategorySnapshot.empty) {
+      categoryExists =
+        newCategorySnapshot.docs
+          .map(doc => doc.data())
+          .findIndex(
+            doc => doc.category.toLowerCase() === category.toLowerCase()
+          ) !== -1;
+    }
+
+    if (newCategorySnapshot.empty || !categoryExists) {
       const categoryDoc = categoriesRef.doc();
       const categoryId = await categoryDoc.get().then(doc => doc.id);
       const createdAt = Date.now();
 
       await categoriesRef.doc(categoryId).set({
-        category: category.toLowerCase(),
+        category,
         createdAt,
         totalNumberOfCards: 0,
         tags: '',
@@ -143,29 +153,113 @@ export const deteleCard = functions.https.onCall(
   }
 );
 
+export const getAllCategories = functions.https.onCall(
+  async (empty, context) => {
+    const uid = context.auth!.uid;
+
+    if (!uid) {
+      return;
+    }
+
+    const categoriesCollection = await firestore
+      .doc(`otherInfo/${uid}`)
+      .collection(`categories`)
+      .get();
+
+    if (categoriesCollection.empty) {
+      return;
+    }
+
+    const allCategories = categoriesCollection.docs.map(doc => doc.data());
+    const allCategriesUpdated = await Promise.all(
+      allCategories.map(async category => {
+        category.numberOfUnreviewedCards = await retreiveTodaysCardsByCategoryId(
+          category.categoryId,
+          uid
+        );
+        return category;
+      })
+    );
+
+    const allCategoriesSorted = allCategriesUpdated.sort((catA, catB) =>
+      catA.category > catB.category ? 1 : -1
+    );
+
+    return allCategoriesSorted;
+  }
+);
+
+export const updateCategory = functions.https.onCall(
+  async ({ oldCategoryName, newCategoryName }, context) => {
+    const uid = context.auth!.uid;
+    const categoriesRef = firestore.collection(`otherInfo/${uid}/categories`);
+    const newCategorySnapshot = await categoriesRef.get();
+    let categoryExists = false;
+
+    if (!newCategorySnapshot.empty) {
+      categoryExists =
+        newCategorySnapshot.docs
+          .map(doc => doc.data())
+          .findIndex(
+            doc => doc.category.toLowerCase() === newCategoryName.toLowerCase()
+          ) !== -1;
+    }
+
+    if (newCategorySnapshot.empty || !categoryExists) {
+      const { categoryId } = await getCategoryDetailByCategoryName(
+        uid,
+        oldCategoryName
+      );
+
+      await firestore
+        .doc(`otherInfo/${uid}/categories/${categoryId}`)
+        .update({ category: newCategoryName });
+
+      return { isSucceessful: true };
+    }
+
+    return new functions.https.HttpsError('unknown', 'failed', {
+      isSucceessful: false,
+      reason: 'category name already exists'
+    });
+  }
+);
+
 const getCategoryDetailByCategoryName = async (
   uid: string,
   category: string
 ) => {
   const categoriesRef = await firestore
     .collection(`otherInfo/${uid}/categories`)
-    .where('category', '==', category.toLowerCase())
     .get();
+  // .where('category', '==', category.toLowerCase())
+  // .get();
 
-  const categoriesSnapshot = categoriesRef.docs.map(doc => doc.data());
+  const categoriesSnapshot = categoriesRef.docs
+    .map(doc => doc.data())
+    .filter(doc => doc.category.toLowerCase() === category.toLowerCase());
+
   return { ...categoriesSnapshot[0] };
 };
 
-// const hasUnreviewedCard = async (uid: string, categoryId: string) => {
-//   const startOfToday = moment()
-//     .startOf('day')
-//     .valueOf();
+const retreiveTodaysCardsByCategoryId = async (
+  categoryId: number,
+  uid: string
+) => {
+  const startOfToday = moment()
+    .startOf('day')
+    .valueOf();
 
-//   const cardsRef = await firestore
-//     .collection(`cards/${uid}/${categoryId}`)
-//     .where('nextReadTime', '<', startOfToday)
-//     .orderBy('nextReadTime')
-//     .get();
+  const cardsRef = await firestore
+    .collection(`cards/${uid}/${categoryId}`)
+    .where('nextReadTime', '<', startOfToday)
+    .orderBy('nextReadTime')
+    .get();
 
-//   return cardsRef.empty;
-// };
+  const cardsSnapshot = cardsRef.docs.map(doc => ({
+    ...doc.data(),
+    cardId: doc.id
+  }));
+
+  return cardsSnapshot.length;
+};
