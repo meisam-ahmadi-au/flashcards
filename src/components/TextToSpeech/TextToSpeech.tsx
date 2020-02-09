@@ -2,7 +2,7 @@ import React from 'react';
 import SvgIcon from '../SvgIcons/SvgIcons';
 import './TextToSpeech.scss';
 
-const TextToSpeech = ({ text }: { text: string }) => {
+const TextToSpeech: React.FC<{ text: string }> = ({ text }) => {
   const [playing, setPalying] = React.useState(false);
 
   const msg = new SpeechSynthesisUtterance();

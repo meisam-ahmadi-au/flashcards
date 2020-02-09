@@ -4,6 +4,7 @@ import {
   functions
 } from '../components/FirebaseAuthentication/FirebaseAuthentication';
 import { INewCard, IUpdateCard, ICard } from '../util/interfaces';
+import Axios from 'axios';
 
 const retreiveTodaysCardsByCategoryId = async (
   categoryId: number,
@@ -85,6 +86,15 @@ const updateCategory = (oldCategoryName: string) => async (
     newCategoryName
   });
 
+const getPronunciation = (text: string) => {
+  const MerisamWebsterApiKey = process.env.REACT_APP_MERRIAM_WEBSTER;
+  const meriamWebsterUrl = `https://www.dictionaryapi.com/api/v3/references/learners/json/${text}?key=${MerisamWebsterApiKey}`;
+
+  return Axios.get(meriamWebsterUrl)
+    .then(res => res.data[0])
+    .then(res => res.hwi.prs[0].sound.audio);
+};
+
 export default {
   retreiveTodaysCardsByCategoryId,
   getCategoryDetailByCategoryName,
@@ -95,5 +105,6 @@ export default {
   addCategory,
   deleteCard,
   deleteCategory,
-  updateCategory
+  updateCategory,
+  getPronunciation
 };

@@ -8,6 +8,7 @@ import {
 } from '../../util/superMemoII';
 import TextToSpeech from '../TextToSpeech/TextToSpeech';
 import styles from './ReviewCard.module.scss';
+import MeriamWebsterPronunciation from '../TextToSpeech/MeriamWebsterPronunciation';
 
 const Card: React.FC<IReviewCard> = props => {
   const {
@@ -50,6 +51,7 @@ const Card: React.FC<IReviewCard> = props => {
         <div className={frontClasses}>
           <h4>{frontText}</h4>
           <TextToSpeech text={frontText} />
+          <MeriamWebsterPronunciation text={frontText} />
         </div>
         <div className={styles['card__image--container']}>
           <img
