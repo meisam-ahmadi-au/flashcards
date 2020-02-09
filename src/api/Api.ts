@@ -11,6 +11,7 @@ const retreiveTodaysCardsByCategoryId = async (
   uid: string
 ) => {
   const startOfToday = moment()
+    .utcOffset(-600)
     .startOf('day')
     .valueOf();
 
@@ -92,7 +93,8 @@ const getPronunciation = (text: string) => {
 
   return Axios.get(meriamWebsterUrl)
     .then(res => res.data[0])
-    .then(res => res.hwi.prs[0].sound.audio);
+    .then(res => res.hwi.prs[0].sound.audio)
+    .catch(console.log);
 };
 
 export default {

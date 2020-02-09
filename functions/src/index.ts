@@ -232,8 +232,6 @@ const getCategoryDetailByCategoryName = async (
   const categoriesRef = await firestore
     .collection(`otherInfo/${uid}/categories`)
     .get();
-  // .where('category', '==', category.toLowerCase())
-  // .get();
 
   const categoriesSnapshot = categoriesRef.docs
     .map(doc => doc.data())

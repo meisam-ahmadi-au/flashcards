@@ -50,8 +50,10 @@ const Card: React.FC<IReviewCard> = props => {
       <div className={styles.card__content}>
         <div className={frontClasses}>
           <h4>{frontText}</h4>
-          <TextToSpeech text={frontText} />
-          <MeriamWebsterPronunciation text={frontText} />
+          <div>
+            <TextToSpeech text={frontText} />
+            <MeriamWebsterPronunciation text={frontText} />
+          </div>
         </div>
         <div className={styles['card__image--container']}>
           <img
@@ -62,7 +64,10 @@ const Card: React.FC<IReviewCard> = props => {
         </div>
         <div className={backClasses}>
           <h4>{backText}</h4>
-          <TextToSpeech text={backText} />
+          <div>
+            <TextToSpeech text={backText} />
+            <MeriamWebsterPronunciation text={backText} />
+          </div>
         </div>
       </div>
 

@@ -21,7 +21,13 @@ const MeriamWebsterPronunciation: React.FC<{ text: string }> = ({ text }) => {
   }, [text]);
 
   const loadPronunciation = async () => {
+    if (!word) {
+      return;
+    }
     const baseFilename = (await Api.getPronunciation(word)) as string;
+    if (!baseFilename) {
+      return;
+    }
     const subdirectory = baseFilename.startsWith('bix')
       ? 'bix'
       : baseFilename.startsWith('gg')

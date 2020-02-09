@@ -39,12 +39,13 @@ const getUserData = (userAuth: firebase.User) => async (
   } else {
     unsubscribeFromUser = userRef.onSnapshot(
       userSnapshot => {
-        localStorage.setItem('user', JSON.stringify(userSnapshot.data()));
-        if (
-          currentStateUser &&
-          currentStateUser.uid !== userSnapshot.data()?.uid
-        ) {
-          dispatch(Actions.setUser(userSnapshot.data() as firebase.User));
+        const userData = userSnapshot.data();
+        if (userData) {
+          userData.uid = userAuth.uid;
+        }
+        localStorage.setItem('user', JSON.stringify(userData));
+        if (currentStateUser && currentStateUser.uid !== userData?.uid) {
+          dispatch(Actions.setUser(userData as firebase.User));
         }
       },
       err => console.log({ err })
@@ -68,6 +69,7 @@ export const logout = () => async (dispatch: any) => {
     unsubscribeFromAuthentication();
   }
 
+  localStorage.setItem('user', JSON.stringify(null));
   dispatch(Actions.unsetUser());
   dispatch(Actions.unsetCategories());
   dispatch(Actions.unsetCategory());
