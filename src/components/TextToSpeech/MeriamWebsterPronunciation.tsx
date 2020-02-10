@@ -5,7 +5,7 @@ import mwSrc from '../../assets/meriamwebster.png';
 import SvgIcon from '../SvgIcons/SvgIcons';
 
 const MeriamWebsterPronunciation: React.FC<{ text: string }> = ({ text }) => {
-  const [word, setWord] = useState('');
+  const [word, setWord] = useState(text);
   const [audio, setAudio] = useState('');
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -18,6 +18,9 @@ const MeriamWebsterPronunciation: React.FC<{ text: string }> = ({ text }) => {
         setWord(firstWord);
       }
     }
+    return () => {
+      setAudio("");
+    };
   }, [text]);
 
   const loadPronunciation = async () => {

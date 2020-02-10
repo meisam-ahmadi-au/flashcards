@@ -31,7 +31,7 @@ const CardInputForm: React.FC<ICardInputForm> = ({
 
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;
-    if ((name === 'back' || name === 'front') && value.trimStart()) {
+    if (name === 'back' || name === 'front') {
       setNewCard(prev => ({ ...prev, ...{ [name]: value.trimStart() } }));
     }
   };

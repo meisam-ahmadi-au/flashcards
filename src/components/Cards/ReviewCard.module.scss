@@ -13,6 +13,12 @@
     grid-template-rows: 1fr 102px 1fr;
   }
 
+  &__options {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+  }
+
   &__front,
   &__back {
     min-height: 175px;

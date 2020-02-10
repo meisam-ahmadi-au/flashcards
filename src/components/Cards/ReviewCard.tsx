@@ -50,7 +50,7 @@ const Card: React.FC<IReviewCard> = props => {
       <div className={styles.card__content}>
         <div className={frontClasses}>
           <h4>{frontText}</h4>
-          <div>
+          <div className={styles.card__options}>
             <TextToSpeech text={frontText} />
             <MeriamWebsterPronunciation text={frontText} />
           </div>
@@ -64,7 +64,7 @@ const Card: React.FC<IReviewCard> = props => {
         </div>
         <div className={backClasses}>
           <h4>{backText}</h4>
-          <div>
+          <div className={styles.card__options}>
             <TextToSpeech text={backText} />
             <MeriamWebsterPronunciation text={backText} />
           </div>
