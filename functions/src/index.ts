@@ -134,6 +134,16 @@ export const deleteCategory = functions.https.onCall(
   }
 );
 
+export const getTodaysCardsByCategoryId = functions.https.onCall(
+  async ({ categoryId, uid }, context) => {
+    const cardSnapshot = await retreiveTodaysCardsByCategoryId(categoryId, uid);
+    return {
+      cardSnapshot,
+      isSucceessful: true
+    };
+  }
+);
+
 export const deteleCard = functions.https.onCall(
   async ({ category, cardId }, context) => {
     const uid = context.auth!.uid;
@@ -173,10 +183,11 @@ export const getAllCategories = functions.https.onCall(
     const allCategories = categoriesCollection.docs.map(doc => doc.data());
     const allCategriesUpdated = await Promise.all(
       allCategories.map(async category => {
-        category.numberOfUnreviewedCards = await retreiveTodaysCardsByCategoryId(
+        const todaysCard = await retreiveTodaysCardsByCategoryId(
           category.categoryId,
           uid
         );
+        category.numberOfUnreviewedCards = todaysCard.length;
         return category;
       })
     );
@@ -259,5 +270,5 @@ const retreiveTodaysCardsByCategoryId = async (
     cardId: doc.id
   }));
 
-  return cardsSnapshot.length;
+  return cardsSnapshot;
 };
