@@ -27,6 +27,7 @@ const generalReducer = (state = initialState, action: IGeneralAction) => {
   switch (action.type) {
     case actionTypes.IS_LOADING:
     case actionTypes.SHOW_DIALOGUE:
+    case actionTypes.HAS_ERROR:
       return updateState(state, action.payload);
     default:
       return state;

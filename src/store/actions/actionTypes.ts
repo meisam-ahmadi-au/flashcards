@@ -11,7 +11,8 @@ const ActionTypes = {
   GET_USER_DATA: 'GET_USER_DATA',
   SIGN_OUT: 'SIGN_OUT',
   IS_LOADING: 'IS_LOADING',
-  SHOW_DIALOGUE: 'SHOW_DIALOGUE'
+  SHOW_DIALOGUE: 'SHOW_DIALOGUE',
+  HAS_ERROR: 'HAS_ERROR'
 };
 
 export default ActionTypes;
@@ -60,6 +61,14 @@ export const Actions = {
   loaded: () => ({
     type: ActionTypes.IS_LOADING,
     payload: { isLoading: false }
+  }),
+  hasError: () => ({
+    type: ActionTypes.HAS_ERROR,
+    payload: { hasError: true }
+  }),
+  hasNoError: () => ({
+    type: ActionTypes.HAS_ERROR,
+    payload: { hasError: false }
   }),
   showDialogue: (showDialogue: DialogueType) => ({
     type: ActionTypes.SHOW_DIALOGUE,

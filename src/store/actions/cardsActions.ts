@@ -121,9 +121,10 @@ export const updateReviewedCardThunk: ThunkDispatchPromise = (
   const categoryId = categories.find(cat => cat.category === category)
     ?.categoryId;
 
-  dispatch(Actions.loading());
-  if (categoryId) await Api.updateCard(uid, categoryId)(updatedCard);
-  dispatch(Actions.loaded());
-
+  if (categoryId)
+    await Api.updateCard(
+      uid,
+      categoryId
+    )(updatedCard).catch(() => dispatch(Actions.hasError()));
   return Promise.resolve();
 };

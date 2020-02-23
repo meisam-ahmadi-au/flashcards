@@ -8,6 +8,7 @@ import styles from './Category.module.scss';
 import CategoryBadges from './CategoryBadges';
 import { useHistory } from 'react-router-dom';
 import { Actions } from '../../store/actions/actionTypes';
+import classNames from '../../util/classNames';
 
 interface IProps {
   totalNumberOfCards: number;
@@ -37,7 +38,9 @@ const Category: React.FC<IProps> = props => {
 
   const deleteCategory = (categoryName: string) => (e: SyntheticEvent) => {
     e.stopPropagation();
-    dispatch(deleteCategoryAndUpdate(categoryName));
+    if (totalNumberOfCards > 0) {
+      dispatch(deleteCategoryAndUpdate(categoryName));
+    }
   };
 
   const editCategory = (e: SyntheticEvent) => {
@@ -86,7 +89,9 @@ const Category: React.FC<IProps> = props => {
         />
 
         <SvgIcons
-          className={styles.deck__svg}
+          className={classNames(styles.deck__svg, {
+            disabled: totalNumberOfCards > 0
+          })}
           iconId="delete"
           strokeWidth="0"
           title="delete"

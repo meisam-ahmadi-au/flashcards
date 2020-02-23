@@ -1,32 +1,23 @@
-import moment from 'moment';
 import {
   firestore,
   functions
 } from '../components/FirebaseAuthentication/FirebaseAuthentication';
-import { INewCard, IUpdateCard, ICard } from '../util/interfaces';
+import { INewCard, IUpdateCard } from '../util/interfaces';
 import Axios from 'axios';
 
 const retreiveTodaysCardsByCategoryId = async (
   categoryId: number,
   uid: string
 ) => {
-  const startOfToday = moment()
-    .utcOffset(-600)
-    .startOf('day')
-    .valueOf();
+  const { data } = await functions.httpsCallable('getTodaysCardsByCategoryId')({
+    categoryId,
+    uid
+  });
+  debugger;
+  console.log({ data });
 
-  const cardsRef = await firestore
-    .collection(`cards/${uid}/${categoryId}`)
-    .where('nextReadTime', '<', startOfToday)
-    .orderBy('nextReadTime')
-    .get();
-
-  const cardsSnapshot = cardsRef.docs.map(doc => ({
-    ...doc.data(),
-    cardId: doc.id
-  })) as ICard[];
-
-  return [...cardsSnapshot];
+  const { cardSnapshot } = data;
+  return [...cardSnapshot];
 };
 
 const getCategoryDetailByCategoryName = async (
@@ -55,7 +46,7 @@ const updateCard = (
     .update(updatedCard);
 };
 
-const getAllCategories = async (uid: string) => {
+const getAllCategories = async () => {
   const { data: allCategoriesSorted } = await functions.httpsCallable(
     'getAllCategories'
   )();

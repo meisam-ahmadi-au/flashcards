@@ -71,7 +71,7 @@ const Cards: React.FC = () => {
       newCardsToReview.push(activeCardUpdated);
     }
 
-    await dispatch(updateReviewedCardThunk(activeCardUpdated));
+    dispatch(updateReviewedCardThunk(activeCardUpdated));
     // ignoring first element and getting the rest
     const [, ...restOfCards] = newCardsToReview;
     setCardsToReview(restOfCards);

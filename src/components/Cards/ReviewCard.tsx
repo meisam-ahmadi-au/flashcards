@@ -73,7 +73,7 @@ const Card: React.FC<IReviewCard> = props => {
 
       <button
         className={styles.card__toggle}
-        onClick={() => setShowBack(!showBack)}
+        onClick={() => setShowBack(s => !s)}
       >
         Show
       </button>

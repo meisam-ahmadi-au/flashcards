@@ -14,19 +14,23 @@ export const getAllCategories: ThunkDispatchPromise = () => async (
   dispatch,
   getState
 ) => {
-  dispatch(Actions.loading());
-  const categories = await Api.getAllCategories(getState().auth.user.uid);
-  if (categories) {
-    dispatch(Actions.setCategories(categories));
+  const { categories } = getState().categories;
+
+  if (categories.length === 0) {
+    dispatch(Actions.loading());
+    const categories = await Api.getAllCategories();
+    if (categories) {
+      dispatch(Actions.setCategories(categories));
+    }
+    dispatch(Actions.loaded());
   }
-  dispatch(Actions.loaded());
 
   return Promise.resolve();
 };
 
-export const deleteCategoryAndUpdate = (category: string) => async (
-  dispatch: Dispatch<any>
-) => {
+export const deleteCategoryAndUpdate: ThunkDispatchPromise = (
+  category: string
+) => async (dispatch, getState) => {
   dispatch(Actions.loading());
   await Api.deleteCategory(category);
   dispatch(getAllCategories());

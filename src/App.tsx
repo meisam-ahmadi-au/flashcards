@@ -12,6 +12,7 @@ import { Modal } from './components/Portal/Portal';
 import ShowIf from './components/ShowIf/ShowIf';
 import Spinner from './components/Spinner/Spinner';
 import { IReduxStates } from './store/reducers/states';
+import ErrorToast from './components/ErrorToast/ErrorToast';
 
 const App: React.FC = () => {
   const isLoading = useSelector((s: IReduxStates) => s.general.isLoading);
@@ -23,6 +24,7 @@ const App: React.FC = () => {
           <Spinner />
         </Modal>
       )}
+      <ErrorToast />
       <Navbar />
       <div className="app__body">
         <Switch>
