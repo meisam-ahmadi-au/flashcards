@@ -118,13 +118,22 @@ export const updateReviewedCardThunk: ThunkDispatchPromise = (
     categories: { categories, category }
   } = getState();
 
-  const categoryId = categories.find(cat => cat.category === category)
-    ?.categoryId;
+  const reviewedCategoryUpdated = categories.map(cat => {
+    if (cat.category === category) {
+      cat.numberOfUnreviewedCards--;
+    }
+    return cat;
+  });
+  dispatch(Actions.setCategories(reviewedCategoryUpdated));
 
-  if (categoryId)
+  const reviewedCategory = categories.find(cat => cat.category === category);
+  if (reviewedCategory) {
+    const { categoryId } = reviewedCategory;
     await Api.updateCard(
       uid,
       categoryId
     )(updatedCard).catch(() => dispatch(Actions.hasError()));
+  }
+
   return Promise.resolve();
 };
