@@ -48,6 +48,7 @@ const AllCards: React.FC = () => {
   }, [dispatch, category]);
 
   const allModals = (dialogueType: string) => {
+    debugger;
     switch (dialogueType) {
       case DialogueType.DELETE:
         return <DeleteCard />;

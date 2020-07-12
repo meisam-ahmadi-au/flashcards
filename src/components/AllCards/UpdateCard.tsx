@@ -6,13 +6,23 @@ import { IReduxStates } from '../../store/reducers/states';
 import { ICardSides } from '../../util/interfaces';
 import CardInputForm from '../AddCard/CardInputForm';
 
-const UpdateCard: React.FC = () => {
+interface Props {
+  onCancel?: () => void;
+}
+
+const UpdateCard: React.FC<Props> = ({ onCancel }) => {
   const dispatch = useDispatch();
   const stopPropagation = (e: SyntheticEvent) => e.stopPropagation();
   const { front, back } = useSelector((s: IReduxStates) => s.cards.card);
 
-  const submitHandler = (card: ICardSides) => dispatch(updateCardThunks(card));
-  const cancelDialogue = () => dispatch(Actions.cancelDialogue());
+  const submitHandler = (card: ICardSides) => {
+    dispatch(updateCardThunks(card));
+    onCancel && onCancel();
+  };
+  const cancelDialogue = () => {
+    onCancel && onCancel();
+    dispatch(Actions.cancelDialogue());
+  };
 
   return (
     <div style={style} onClick={stopPropagation}>

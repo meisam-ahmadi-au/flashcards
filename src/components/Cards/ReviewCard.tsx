@@ -9,8 +9,13 @@ import {
 import TextToSpeech from '../TextToSpeech/TextToSpeech';
 import styles from './ReviewCard.module.scss';
 import MeriamWebsterPronunciation from '../TextToSpeech/MeriamWebsterPronunciation';
+import UpdateCard from '../AllCards/UpdateCard';
+import { Actions } from '../../store/actions/actionTypes';
+import { useDispatch } from 'react-redux';
+import { Modal } from '../Portal/Portal';
 
-const Card: React.FC<IReviewCard> = props => {
+const ReviewCard: React.FC<IReviewCard> = props => {
+  console.log({ props });
   const {
     repetitions,
     interval,
@@ -22,6 +27,13 @@ const Card: React.FC<IReviewCard> = props => {
   } = props;
 
   const [showBack, setShowBack] = React.useState(false);
+  const [showUpdate, setShowUpdate] = React.useState(false);
+  const dispatch = useDispatch();
+
+  const onUpdate = () => {
+    dispatch(Actions.setCard(props));
+    setShowUpdate(true);
+  };
 
   const updateCardInterval = (a: IIntervalDeatilsWithQuality) => () => {
     if (!showBack) {
@@ -75,7 +87,7 @@ const Card: React.FC<IReviewCard> = props => {
         className={styles.card__toggle}
         onClick={() => setShowBack(s => !s)}
       >
-        Show
+        {!showBack ? 'Show' : 'Hide'}
       </button>
       <div
         className={classNames(
@@ -85,7 +97,7 @@ const Card: React.FC<IReviewCard> = props => {
       >
         <button
           data-content="Easy"
-          className={classNames(styles.card__button, styles.easy)}
+          className={styles.card__button}
           onClick={updateCardInterval(easy)}
         >
           <span>{`${easy.interval} day(s)`}</span>
@@ -93,7 +105,7 @@ const Card: React.FC<IReviewCard> = props => {
 
         <button
           data-content="Good"
-          className={classNames(styles.card__button, styles.good)}
+          className={styles.card__button}
           onClick={updateCardInterval(good)}
         >
           <span>{`${good.interval} day(s)`}</span>
@@ -101,7 +113,7 @@ const Card: React.FC<IReviewCard> = props => {
 
         <button
           data-content="Hard"
-          className={classNames(styles.card__button, styles.hard)}
+          className={styles.card__button}
           onClick={updateCardInterval(hard)}
         >
           <span>{`${hard.interval} day(s)`}</span>
@@ -109,14 +121,22 @@ const Card: React.FC<IReviewCard> = props => {
 
         <button
           data-content="Insane"
-          className={classNames(styles.card__button, styles.Insane)}
+          className={styles.card__button}
           onClick={updateCardInterval(impossible)}
         >
           <span>again</span>
         </button>
+        <button className={styles.card__update} onClick={onUpdate}>
+          Edit Card Content
+        </button>
       </div>
+      {showUpdate && (
+        <Modal onClick={() => setShowUpdate(false)}>
+          <UpdateCard onCancel={() => setShowUpdate(false)} />
+        </Modal>
+      )}
     </div>
   );
 };
 
-export default Card;
+export default ReviewCard;
