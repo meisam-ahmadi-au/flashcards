@@ -22,7 +22,10 @@ const Cards: React.FC = () => {
   >;
   const { category } = useParams();
   const { cards } = useReduxSelector().cards;
-  const [activeCard, setActiveCard] = useState();
+  const categoryIdInRedux = useReduxSelector().categories.categories.find(
+    c => c.category === category
+  )?.categoryId;
+  const [activeCard, setActiveCard] = useState<ICard>();
   const [cardsToReview, setCardsToReview] = useState([] as ICard[]);
 
   useEffect(() => {
@@ -36,7 +39,13 @@ const Cards: React.FC = () => {
   }, [cardsToReview, cardsToReview.length]);
 
   useEffect(() => {
-    setCardsToReview(cards);
+    const cardsWithCategoryId = cards.map(card => {
+      if (!card.categoryId) {
+        card.categoryId = String(categoryIdInRedux);
+      }
+      return card;
+    });
+    setCardsToReview(cardsWithCategoryId);
   }, [cards]);
 
   const updateCardInterval = async ({
@@ -45,6 +54,9 @@ const Cards: React.FC = () => {
     easeFactor,
     interval
   }: IIntervalDeatilsWithQuality) => {
+    if (!activeCard) {
+      return;
+    }
     const nextReadTime = moment()
       .add(interval, 'days')
       .valueOf();
@@ -80,7 +92,7 @@ const Cards: React.FC = () => {
 
   return (
     <div>
-      {cardsToReview.length ? (
+      {activeCard && cardsToReview.length ? (
         <ReviewCard {...activeCard} updateCard={updateCardInterval} />
       ) : (
         <h4>All reviewed! Well done!</h4>

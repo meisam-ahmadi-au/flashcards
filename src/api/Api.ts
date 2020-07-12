@@ -13,8 +13,6 @@ const retreiveTodaysCardsByCategoryId = async (
     categoryId,
     uid
   });
-  debugger;
-  console.log({ data });
 
   const { cardSnapshot } = data;
   return [...cardSnapshot];

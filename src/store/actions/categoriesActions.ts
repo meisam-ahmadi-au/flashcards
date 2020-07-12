@@ -10,13 +10,12 @@ type ThunkDispatchPromise = (
   a?: any
 ) => ThunkAction<Promise<any>, IReduxStates, {}, Action>;
 
-export const getAllCategories: ThunkDispatchPromise = () => async (
-  dispatch,
-  getState
-) => {
+export const getAllCategories: ThunkDispatchPromise = (
+  refresh = false
+) => async (dispatch, getState) => {
   const { categories } = getState().categories;
 
-  if (categories.length === 0) {
+  if (categories.length === 0 || refresh) {
     dispatch(Actions.loading());
     const categories = await Api.getAllCategories();
     if (categories) {
@@ -33,7 +32,8 @@ export const deleteCategoryAndUpdate: ThunkDispatchPromise = (
 ) => async (dispatch, getState) => {
   dispatch(Actions.loading());
   await Api.deleteCategory(category);
-  dispatch(getAllCategories());
+  await dispatch(getAllCategories(true));
+  dispatch(Actions.loaded());
 };
 
 export const addCategoryAndUpdate = (category: string) => async (
@@ -41,7 +41,7 @@ export const addCategoryAndUpdate = (category: string) => async (
 ) => {
   dispatch(Actions.loading());
   await Api.addCategory(category).catch(console.log);
-  await dispatch(getAllCategories());
+  await dispatch(getAllCategories(true));
   dispatch(Actions.loaded());
 
   return Promise.resolve();
