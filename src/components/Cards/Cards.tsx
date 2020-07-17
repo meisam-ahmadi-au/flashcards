@@ -46,7 +46,7 @@ const Cards: React.FC = () => {
       return card;
     });
     setCardsToReview(cardsWithCategoryId);
-  }, [cards]);
+  }, [cards, categoryIdInRedux]);
 
   const updateCardInterval = async ({
     repetitions,
