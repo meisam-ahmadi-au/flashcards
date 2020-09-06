@@ -11,6 +11,7 @@ import { Actions } from '../../store/actions/actionTypes';
 import { Modal } from '../Portal/Portal';
 import DeleteCard from './DeleteCard';
 import UpdateCard from './UpdateCard';
+import MoveCard from './MoveCard';
 
 const AllCards: React.FC = () => {
   const dispatch = useDispatch();
@@ -48,14 +49,13 @@ const AllCards: React.FC = () => {
   }, [dispatch, category]);
 
   const allModals = (dialogueType: string) => {
-    debugger;
     switch (dialogueType) {
       case DialogueType.DELETE:
         return <DeleteCard />;
       case DialogueType.UPDATE:
         return <UpdateCard />;
       case DialogueType.MOVE:
-        return <h2>Move</h2>;
+        return <MoveCard />;
       default:
         return null;
     }

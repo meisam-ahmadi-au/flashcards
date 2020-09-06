@@ -62,13 +62,14 @@ const CardInputForm: React.FC<ICardInputForm> = ({
         name="back"
       />
       <TextToSpeech text={back} />
-
-      <button onClick={onSubmit} type="submit">
-        Submit
-      </button>
-      <button type="button" onClick={onCancel}>
-        Cancel
-      </button>
+      <div className="add-card__buttons">
+        <button onClick={onSubmit} type="submit">
+          Submit
+        </button>
+        <button type="button" onClick={onCancel}>
+          Cancel
+        </button>
+      </div>
     </form>
   );
 };
