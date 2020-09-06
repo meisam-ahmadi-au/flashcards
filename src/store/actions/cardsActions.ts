@@ -65,21 +65,33 @@ export const updateCardThunks: ThunkDispatchPromise = (
 
 export const addCardThunks: ThunkDispatchPromise = (
   categoryId: number,
-  { front, back }: ICardSides
+  card: IUpdateCard
 ) => async (dispatch, getState) => {
+  if (!card.front || !card.back) {
+    return;
+  }
   dispatch(Actions.loading());
   const { uid } = getState().auth.user;
+  const categories = getState().categories.categories.map(cat => {
+    if (cat.categoryId === categoryId) {
+      cat.totalNumberOfCards++;
+    }
+    return cat;
+  });
+
   const createdAt = Date.now();
   const newCard = {
-    front,
-    back,
-    createdAt,
-    nextReadTime: createdAt,
-    shouldReadFront: true,
-    learningCurve: [createdAt]
+    ...card,
+    createdAt: card.createdAt ?? createdAt,
+    nextReadTime: card.nextReadTime ?? createdAt,
+    shouldReadFront: card.shouldReadFront ?? true,
+    learningCurve: card.learningCurve ?? [createdAt]
   };
   await Api.addCard(uid, categoryId)(newCard).catch(console.log);
+  debugger;
+  dispatch(Actions.setCategories(categories));
   dispatch(Actions.loaded());
+  return Promise.resolve();
 };
 
 export const retreiveTodaysCardsThunks: ThunkDispatchPromise = (

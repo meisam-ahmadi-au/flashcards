@@ -2,7 +2,7 @@ import {
   firestore,
   functions
 } from '../components/FirebaseAuthentication/FirebaseAuthentication';
-import { INewCard, IUpdateCard } from '../util/interfaces';
+import { IUpdateCard } from '../util/interfaces';
 import Axios from 'axios';
 
 const retreiveTodaysCardsByCategoryId = async (
@@ -32,7 +32,7 @@ const getCategoryDetailByCategoryName = async (
 };
 
 const addCard = (uid: string | number, categoryId: number) => async (
-  card: INewCard
+  card: IUpdateCard
 ) => await firestore.collection(`cards/${uid}/${categoryId}`).add(card);
 
 const updateCard = (

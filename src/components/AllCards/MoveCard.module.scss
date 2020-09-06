@@ -1,0 +1,35 @@
+.move-card {
+  background: white;
+  padding: 20px;
+  display: grid;
+  border-radius: 5px;
+  grid-template-columns: max-content max-content;
+  column-gap: 10px;
+  position: relative;
+
+  &__title {
+    grid-column: 1/-1;
+  }
+
+  &__ctegories {
+    grid-column: 1/-1;
+    margin: 15px 0;
+    padding: 5px 0;
+  }
+
+  &__button {
+    padding: 5px 40px;
+    border: none;
+
+    cursor: pointer;
+  }
+
+  &__spinner {
+    position: absolute;
+    background: rgba(100, 100, 100, 0.8);
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
