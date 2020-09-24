@@ -30,6 +30,7 @@ const CardInputForm: React.FC<ICardInputForm> = ({
   }, [isLoading, prevIsLoading]);
 
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // debugger;
     const { name, value } = event.currentTarget;
     if (name === 'back' || name === 'front') {
       setNewCard(prev => ({ ...prev, ...{ [name]: value.trimStart() } }));
@@ -45,22 +46,26 @@ const CardInputForm: React.FC<ICardInputForm> = ({
 
   return (
     <form className="add-card" onSubmit={onSubmit}>
-      <label htmlFor="front">Front:</label>
-      <input
-        type="text"
-        onChange={onInputChange}
-        value={newCard.front}
-        name="front"
-      />
+      <label htmlFor="front">
+        Front:
+        <input
+          type="text"
+          onChange={onInputChange}
+          value={newCard.front}
+          name="front"
+        />
+      </label>
       <TextToSpeech text={front} />
 
-      <label htmlFor="back">Back:</label>
-      <input
-        type="text"
-        onChange={onInputChange}
-        value={newCard.back}
-        name="back"
-      />
+      <label htmlFor="back">
+        Back:
+        <input
+          type="text"
+          onChange={onInputChange}
+          value={newCard.back}
+          name="back"
+        />
+      </label>
       <TextToSpeech text={back} />
       <div className="add-card__buttons">
         <button onClick={onSubmit} type="submit">

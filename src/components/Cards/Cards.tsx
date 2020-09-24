@@ -1,18 +1,18 @@
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { ThunkDispatch } from 'redux-thunk';
+import { Action } from 'redux';
 import { IIntervalDeatilsWithQuality } from '../../util/superMemoII';
 import ReviewCard from './ReviewCard';
-import { useParams } from 'react-router-dom';
 import { useReduxSelector } from '../../store/reduxHelpers';
 import { ICard } from '../../util/interfaces';
 import {
   retreiveTodaysCardsThunks,
   updateReviewedCardThunk
 } from '../../store/actions/cardsActions';
-import { ThunkDispatch } from 'redux-thunk';
 import { IReduxStates } from '../../store/reducers/states';
-import { Action } from 'redux';
 
 const Cards: React.FC = () => {
   const dispatch = useDispatch() as ThunkDispatch<
@@ -20,7 +20,7 @@ const Cards: React.FC = () => {
     {},
     Action<any>
   >;
-  const { category } = useParams();
+  const { category } = useParams<{ category: string }>();
   const { cards } = useReduxSelector().cards;
   const categoryIdInRedux = useReduxSelector().categories.categories.find(
     c => c.category === category
@@ -34,18 +34,18 @@ const Cards: React.FC = () => {
     }
   }, [category, dispatch]);
 
-  useEffect(() => {
-    setActiveCard(cardsToReview[0]);
-  }, [cardsToReview, cardsToReview.length]);
+  // useEffect(() => {
+  //   setActiveCard(cardsToReview[0]);
+  // }, [cardsToReview, cardsToReview.length]);
 
   useEffect(() => {
     const cardsWithCategoryId = cards.map(card => {
-      if (!card.categoryId) {
-        card.categoryId = String(categoryIdInRedux);
-      }
-      return card;
+      return !card.categoryId
+        ? { ...card, categoryId: String(categoryIdInRedux) }
+        : card;
     });
     setCardsToReview(cardsWithCategoryId);
+    setActiveCard(cardsWithCategoryId[0]);
   }, [cards, categoryIdInRedux]);
 
   const updateCardInterval = async ({
@@ -54,6 +54,7 @@ const Cards: React.FC = () => {
     easeFactor,
     interval
   }: IIntervalDeatilsWithQuality) => {
+    debugger;
     if (!activeCard) {
       return;
     }
