@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import flashcardImageSrc from '../../assets/flashcard.png';
 import classNames from '../../util/classNames';
 import { IReviewCard } from '../../util/interfaces';
@@ -11,11 +12,9 @@ import styles from './ReviewCard.module.scss';
 import MeriamWebsterPronunciation from '../TextToSpeech/MeriamWebsterPronunciation';
 import UpdateCard from '../AllCards/UpdateCard';
 import { Actions } from '../../store/actions/actionTypes';
-import { useDispatch } from 'react-redux';
 import { Modal } from '../Portal/Portal';
 
 const ReviewCard: React.FC<IReviewCard> = props => {
-  console.log({ props });
   const {
     repetitions,
     interval,
@@ -36,6 +35,7 @@ const ReviewCard: React.FC<IReviewCard> = props => {
   };
 
   const updateCardInterval = (a: IIntervalDeatilsWithQuality) => () => {
+    debugger;
     if (!showBack) {
       return false;
     }
@@ -86,6 +86,7 @@ const ReviewCard: React.FC<IReviewCard> = props => {
       <button
         className={styles.card__toggle}
         onClick={() => setShowBack(s => !s)}
+        type="button"
       >
         {!showBack ? 'Show' : 'Hide'}
       </button>
@@ -99,6 +100,7 @@ const ReviewCard: React.FC<IReviewCard> = props => {
           data-content="Easy"
           className={styles.card__button}
           onClick={updateCardInterval(easy)}
+          type="button"
         >
           <span>{`${easy.interval} day(s)`}</span>
         </button>
@@ -107,6 +109,7 @@ const ReviewCard: React.FC<IReviewCard> = props => {
           data-content="Good"
           className={styles.card__button}
           onClick={updateCardInterval(good)}
+          type="button"
         >
           <span>{`${good.interval} day(s)`}</span>
         </button>
@@ -115,6 +118,7 @@ const ReviewCard: React.FC<IReviewCard> = props => {
           data-content="Hard"
           className={styles.card__button}
           onClick={updateCardInterval(hard)}
+          type="button"
         >
           <span>{`${hard.interval} day(s)`}</span>
         </button>
@@ -123,10 +127,15 @@ const ReviewCard: React.FC<IReviewCard> = props => {
           data-content="Insane"
           className={styles.card__button}
           onClick={updateCardInterval(impossible)}
+          type="button"
         >
           <span>again</span>
         </button>
-        <button className={styles.card__update} onClick={onUpdate}>
+        <button
+          className={styles.card__update}
+          onClick={onUpdate}
+          type="button"
+        >
           Edit Card Content
         </button>
       </div>
