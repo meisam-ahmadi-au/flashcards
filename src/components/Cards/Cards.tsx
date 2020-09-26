@@ -34,10 +34,6 @@ const Cards: React.FC = () => {
     }
   }, [category, dispatch]);
 
-  // useEffect(() => {
-  //   setActiveCard(cardsToReview[0]);
-  // }, [cardsToReview, cardsToReview.length]);
-
   useEffect(() => {
     const cardsWithCategoryId = cards.map(card => {
       return !card.categoryId
@@ -54,7 +50,6 @@ const Cards: React.FC = () => {
     easeFactor,
     interval
   }: IIntervalDeatilsWithQuality) => {
-    debugger;
     if (!activeCard) {
       return;
     }

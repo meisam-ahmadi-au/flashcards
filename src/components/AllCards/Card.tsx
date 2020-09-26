@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Actions } from '../../store/actions/actionTypes';
@@ -17,6 +18,9 @@ const Card: React.FC<ICard> = props => {
     <div className={Styles.card}>
       <h4 className={Styles.card__side}>{props.front}</h4>
       <h4 className={Styles.card__side}>{props.back}</h4>
+      <p className={Styles.card__nextRead}>
+        {moment(props.nextReadTime).format('DD-MMM')}
+      </p>
       <div className={Styles.card__tools}>
         <SvgIcons
           className={Styles.card__svg}
