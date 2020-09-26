@@ -73,17 +73,18 @@ const Cards: React.FC = () => {
       repetitions
     };
 
-    const newCardsToReview = [...cardsToReview];
+    let [, ...newCardsToReview] = cardsToReview;
+    console.log({ quality });
     // if impossible
     if (quality === 0) {
-      newCardsToReview.push(activeCardUpdated);
+      newCardsToReview = [...newCardsToReview, activeCardUpdated];
     }
 
     dispatch(updateReviewedCardThunk(activeCardUpdated));
     // ignoring first element and getting the rest
-    const [, ...restOfCards] = newCardsToReview;
-    setCardsToReview(restOfCards);
-    setActiveCard(restOfCards[0]);
+    console.log({ newCardsToReview });
+    setCardsToReview(newCardsToReview);
+    setActiveCard(newCardsToReview[0]);
   };
 
   return (
