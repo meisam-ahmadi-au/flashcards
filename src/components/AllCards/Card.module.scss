@@ -1,7 +1,7 @@
 .card {
   padding: 25px 0;
   display: grid;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 25px;
   grid-template-columns: 1fr 25px;
   min-height: 50px;
   border-radius: 15px;
@@ -30,6 +30,10 @@
 
   &__side {
     padding: 0 25px;
+  }
+
+  &__nextRead {
+    grid-row: 3;
   }
 
   &__svg {

@@ -31,13 +31,12 @@ const AllCards: React.FC = () => {
     (cards: ICard[], searchTerm: string) => {
       if (!searchTerm) {
         return cards;
-      } else {
-        return cards.filter(
-          card =>
-            card.front.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            card.back.toLowerCase().includes(searchTerm.toLowerCase())
-        );
       }
+      return cards.filter(
+        card =>
+          card.front.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          card.back.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     },
     []
   );
