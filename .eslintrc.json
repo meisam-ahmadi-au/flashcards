@@ -11,6 +11,16 @@
         "extensions": [".js", ".jsx", ".ts", ".tsx"]
       }
     ],
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
     "react/destructuring-assignment": 1,
     "react/prop-types": 1,
     "react/prefer-stateless-function": 1,

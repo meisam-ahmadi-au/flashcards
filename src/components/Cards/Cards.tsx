@@ -13,6 +13,7 @@ import {
   updateReviewedCardThunk
 } from '../../store/actions/cardsActions';
 import { IReduxStates } from '../../store/reducers/states';
+import { Actions } from '../../store/actions/actionTypes';
 
 const Cards: React.FC = () => {
   const dispatch = useDispatch() as ThunkDispatch<
@@ -27,7 +28,7 @@ const Cards: React.FC = () => {
   )?.categoryId;
   const [activeCard, setActiveCard] = useState<ICard>();
   const [cardsToReview, setCardsToReview] = useState([] as ICard[]);
-
+  console.log({ cards });
   useEffect(() => {
     if (category) {
       dispatch(retreiveTodaysCardsThunks(category));
@@ -81,10 +82,10 @@ const Cards: React.FC = () => {
     }
 
     dispatch(updateReviewedCardThunk(activeCardUpdated));
-    // ignoring first element and getting the rest
+    dispatch(Actions.setCards(newCardsToReview));
     console.log({ newCardsToReview });
-    setCardsToReview(newCardsToReview);
-    setActiveCard(newCardsToReview[0]);
+    // setCardsToReview(newCardsToReview);
+    // setActiveCard(newCardsToReview[0]);
   };
 
   return (
