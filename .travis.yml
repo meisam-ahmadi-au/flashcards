@@ -5,6 +5,12 @@ node_js:
 script:
   - echo "deploying..."
 
+# safelist
+branches:
+  only:
+    - master
+    - stable
+
 install:
   - npm i
   - npm run build
