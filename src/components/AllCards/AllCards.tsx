@@ -16,7 +16,7 @@ import MoveCard from './MoveCard';
 const AllCards: React.FC = () => {
   const dispatch = useDispatch();
   const allCards = useSelector((s: IReduxStates) => s.cards.cards);
-  const { category } = useParams();
+  const { category } = useParams<{ category: string }>();
   const [keyword, setKeyword] = React.useState('');
   const showConfirmation = useSelector(
     (s: IReduxStates) => s.general.showDialogue

@@ -10,7 +10,7 @@ import CardInputForm from './CardInputForm';
 
 const AddCards: React.FC = () => {
   const dispatch = useDispatch();
-  const { category: categoryName } = useParams();
+  const { category: categoryName } = useParams<{ category: string }>();
   const history = useHistory();
   const category = useSelector(
     (s: IReduxStates) => s.categories.categories
