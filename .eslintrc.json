@@ -7,9 +7,7 @@
   "rules": {
     "react/jsx-filename-extension": [
       1,
-      {
-        "extensions": [".js", ".jsx", ".ts", ".tsx"]
-      }
+      { "extensions": [".js", ".jsx", ".ts", ".tsx"] }
     ],
     "import/extensions": [
       "error",
@@ -24,12 +22,9 @@
     "react/destructuring-assignment": 1,
     "react/prop-types": 1,
     "react/prefer-stateless-function": 1,
-    "react/jsx-props-no-spreading": [
-      1,
-      {
-        "exceptions": ["ReviewCard"]
-      }
-    ]
+    "react/jsx-props-no-spreading": [1, { "exceptions": ["Card"] }],
+    "arrow-parens": [1, "as-needed"],
+    "prettier/prettier": [1, { "endOfLine": "auto" }]
   },
   "settings": {
     "import/resolver": {
