@@ -21,8 +21,9 @@
     ],
     "react/destructuring-assignment": 1,
     "react/prop-types": 1,
+    "react/jsx-boolean-value": 0,
     "react/prefer-stateless-function": 1,
-    "react/jsx-props-no-spreading": [1, { "exceptions": ["Card"] }],
+    "react/jsx-props-no-spreading": [1, { "exceptions": ["Card", "Category"] }],
     "arrow-parens": [1, "as-needed"],
     "prettier/prettier": [1, { "endOfLine": "auto" }]
   },
