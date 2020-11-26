@@ -3,7 +3,7 @@ import {
   firestore,
   functions,
 } from '../components/FirebaseAuthentication/FirebaseAuthentication';
-import { INewCard, IUpdateCard, IUpdateCard } from '../util/interfaces';
+import { IUpdateCard } from '../util/interfaces';
 
 const retreiveTodaysCardsByCategoryId = async (
   categoryId: number,
@@ -27,12 +27,12 @@ const getCategoryDetailByCategoryName = async (
     .where('category', '==', category.toLowerCase())
     .get();
 
-  const categoriesSnapshot = categoriesRef.docs.map((doc) => doc.data());
+  const categoriesSnapshot = categoriesRef.docs.map(doc => doc.data());
   return { ...categoriesSnapshot[0] };
 };
 
 const addCard = (uid: string | number, categoryId: number) => async (
-  card: INewCard
+  card: IUpdateCard
 ) => await firestore.collection(`cards/${uid}/${categoryId}`).add(card);
 
 const updateCard = (
@@ -81,8 +81,8 @@ const getPronunciation = (text: string) => {
   const meriamWebsterUrl = `https://www.dictionaryapi.com/api/v3/references/learners/json/${text}?key=${MerisamWebsterApiKey}`;
 
   return Axios.get(meriamWebsterUrl)
-    .then((res) => res.data[0])
-    .then((res) => res.hwi.prs[0].sound.audio)
+    .then(res => res.data[0])
+    .then(res => res.hwi.prs[0].sound.audio)
     .catch(console.log);
 };
 

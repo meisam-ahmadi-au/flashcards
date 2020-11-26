@@ -38,7 +38,7 @@ const Category: React.FC<IProps> = props => {
 
   const deleteCategory = (categoryName: string) => (e: SyntheticEvent) => {
     e.stopPropagation();
-    if (totalNumberOfCards > 0) {
+    if (totalNumberOfCards === 0) {
       dispatch(deleteCategoryAndUpdate(categoryName));
     }
   };

@@ -1,18 +1,19 @@
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { ThunkDispatch } from 'redux-thunk';
+import { Action } from 'redux';
 import { IIntervalDeatilsWithQuality } from '../../util/superMemoII';
 import ReviewCard from './ReviewCard';
-import { useParams } from 'react-router-dom';
 import { useReduxSelector } from '../../store/reduxHelpers';
 import { ICard } from '../../util/interfaces';
 import {
   retreiveTodaysCardsThunks,
   updateReviewedCardThunk
 } from '../../store/actions/cardsActions';
-import { ThunkDispatch } from 'redux-thunk';
 import { IReduxStates } from '../../store/reducers/states';
-import { Action } from 'redux';
+import { Actions } from '../../store/actions/actionTypes';
 
 const Cards: React.FC = () => {
   const dispatch = useDispatch() as ThunkDispatch<
@@ -20,11 +21,14 @@ const Cards: React.FC = () => {
     {},
     Action<any>
   >;
-  const { category } = useParams();
+  const { category } = useParams<{ category: string }>();
   const { cards } = useReduxSelector().cards;
-  const [activeCard, setActiveCard] = useState();
+  const categoryIdInRedux = useReduxSelector().categories.categories.find(
+    c => c.category === category
+  )?.categoryId;
+  const [activeCard, setActiveCard] = useState<ICard>();
   const [cardsToReview, setCardsToReview] = useState([] as ICard[]);
-
+  console.log({ cards });
   useEffect(() => {
     if (category) {
       dispatch(retreiveTodaysCardsThunks(category));
@@ -32,12 +36,14 @@ const Cards: React.FC = () => {
   }, [category, dispatch]);
 
   useEffect(() => {
-    setActiveCard(cardsToReview[0]);
-  }, [cardsToReview, cardsToReview.length]);
-
-  useEffect(() => {
-    setCardsToReview(cards);
-  }, [cards]);
+    const cardsWithCategoryId = cards.map(card => {
+      return !card.categoryId
+        ? { ...card, categoryId: String(categoryIdInRedux) }
+        : card;
+    });
+    setCardsToReview(cardsWithCategoryId);
+    setActiveCard(cardsWithCategoryId[0]);
+  }, [cards, categoryIdInRedux]);
 
   const updateCardInterval = async ({
     repetitions,
@@ -45,6 +51,9 @@ const Cards: React.FC = () => {
     easeFactor,
     interval
   }: IIntervalDeatilsWithQuality) => {
+    if (!activeCard) {
+      return;
+    }
     const nextReadTime = moment()
       .add(interval, 'days')
       .valueOf();
@@ -65,22 +74,23 @@ const Cards: React.FC = () => {
       repetitions
     };
 
-    const newCardsToReview = [...cardsToReview];
+    let [, ...newCardsToReview] = cardsToReview;
+    console.log({ quality });
     // if impossible
     if (quality === 0) {
-      newCardsToReview.push(activeCardUpdated);
+      newCardsToReview = [...newCardsToReview, activeCardUpdated];
     }
 
     dispatch(updateReviewedCardThunk(activeCardUpdated));
-    // ignoring first element and getting the rest
-    const [, ...restOfCards] = newCardsToReview;
-    setCardsToReview(restOfCards);
-    setActiveCard(restOfCards[0]);
+    dispatch(Actions.setCards(newCardsToReview));
+    console.log({ newCardsToReview });
+    // setCardsToReview(newCardsToReview);
+    // setActiveCard(newCardsToReview[0]);
   };
 
   return (
     <div>
-      {cardsToReview.length ? (
+      {activeCard && cardsToReview.length ? (
         <ReviewCard {...activeCard} updateCard={updateCardInterval} />
       ) : (
         <h4>All reviewed! Well done!</h4>

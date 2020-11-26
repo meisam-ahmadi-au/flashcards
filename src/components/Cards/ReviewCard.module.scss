@@ -155,4 +155,12 @@
       border-left-color: #2699ab;
     }
   }
+
+  &__update {
+    grid-column: 1/-1;
+    height: 40px;
+    border: none;
+    letter-spacing: 2px;
+    font-weight: bold;
+  }
 }

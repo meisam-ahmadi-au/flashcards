@@ -11,11 +11,12 @@ import { Actions } from '../../store/actions/actionTypes';
 import { Modal } from '../Portal/Portal';
 import DeleteCard from './DeleteCard';
 import UpdateCard from './UpdateCard';
+import MoveCard from './MoveCard';
 
 const AllCards: React.FC = () => {
   const dispatch = useDispatch();
   const allCards = useSelector((s: IReduxStates) => s.cards.cards);
-  const { category } = useParams();
+  const { category } = useParams<{ category: string }>();
   const [keyword, setKeyword] = React.useState('');
   const showConfirmation = useSelector(
     (s: IReduxStates) => s.general.showDialogue
@@ -30,13 +31,12 @@ const AllCards: React.FC = () => {
     (cards: ICard[], searchTerm: string) => {
       if (!searchTerm) {
         return cards;
-      } else {
-        return cards.filter(
-          card =>
-            card.front.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            card.back.toLowerCase().includes(searchTerm.toLowerCase())
-        );
       }
+      return cards.filter(
+        card =>
+          card.front.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          card.back.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     },
     []
   );
@@ -54,7 +54,7 @@ const AllCards: React.FC = () => {
       case DialogueType.UPDATE:
         return <UpdateCard />;
       case DialogueType.MOVE:
-        return <h2>Move</h2>;
+        return <MoveCard />;
       default:
         return null;
     }

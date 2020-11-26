@@ -15,7 +15,7 @@ export const getAllCategories: ThunkDispatchPromise = (
 ) => async (dispatch, getState) => {
   let { categories } = getState().categories;
 
-  if (categories.length === 0) {
+  if (categories.length === 0 || refresh) {
     dispatch(Actions.loading());
     categories = await Api.getAllCategories();
     if (categories) {
@@ -32,7 +32,8 @@ export const deleteCategoryAndUpdate: ThunkDispatchPromise = (
 ) => async (dispatch, getState) => {
   dispatch(Actions.loading());
   await Api.deleteCategory(category);
-  dispatch(getAllCategories());
+  await dispatch(getAllCategories(true));
+  dispatch(Actions.loaded());
 };
 
 export const addCategoryAndUpdate = (category: string) => async (
@@ -40,7 +41,7 @@ export const addCategoryAndUpdate = (category: string) => async (
 ) => {
   dispatch(Actions.loading());
   await Api.addCategory(category).catch(console.log);
-  await dispatch(getAllCategories());
+  await dispatch(getAllCategories(true));
   dispatch(Actions.loaded());
 
   return Promise.resolve();
@@ -48,7 +49,7 @@ export const addCategoryAndUpdate = (category: string) => async (
 
 export const getCategoryByCategoryName: ThunkDispatchPromise = (
   categoryName: string
-) => async (dispatch) => {
+) => async dispatch => {
   dispatch(Actions.loading());
   dispatch(getAllCategories());
 };
@@ -60,7 +61,7 @@ export const updateCategoryThunk: ThunkDispatchPromise = (
   dispatch(Actions.loading());
   await Api.updateCategory(category)(newCategoryName);
   dispatch(Actions.cancelDialogue());
-  const newCategories = categories.map((cat) => {
+  const newCategories = categories.map(cat => {
     if (cat.category.trim().toLowerCase() === category.trim().toLowerCase()) {
       cat.category = newCategoryName.trim();
     }

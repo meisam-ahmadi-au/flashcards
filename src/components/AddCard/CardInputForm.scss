@@ -3,10 +3,11 @@
   margin: auto;
   display: flex;
   flex-flow: column;
-  align-items: flex-start;
+  align-items: stretch;
   font-size: 20px;
 
   label {
+    text-align: left;
     margin-top: 10px;
   }
 
@@ -26,9 +27,16 @@
     }
   }
 
+  &__buttons {
+    flex-basis: 100%;
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+  }
+
   button {
     border: none;
-    width: 50%;
+    width: 45%;
     height: 50px;
     background: #006effa1;
     margin-top: 20px;
