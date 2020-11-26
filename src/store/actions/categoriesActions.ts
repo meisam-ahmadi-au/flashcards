@@ -1,8 +1,8 @@
 import { Dispatch } from 'react';
-import Api from '../../api/Api';
-import { IReduxStates } from './../reducers/states';
-import { Actions } from './actionTypes';
 import { ThunkAction } from 'redux-thunk';
+import Api from '../../api/Api';
+import { IReduxStates } from '../reducers/states';
+import { Actions } from './actionTypes';
 
 type Action = { type: string; payload?: any };
 
@@ -13,11 +13,11 @@ type ThunkDispatchPromise = (
 export const getAllCategories: ThunkDispatchPromise = (
   refresh = false
 ) => async (dispatch, getState) => {
-  const { categories } = getState().categories;
+  let { categories } = getState().categories;
 
   if (categories.length === 0 || refresh) {
     dispatch(Actions.loading());
-    const categories = await Api.getAllCategories();
+    categories = await Api.getAllCategories();
     if (categories) {
       dispatch(Actions.setCategories(categories));
     }

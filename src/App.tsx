@@ -28,7 +28,7 @@ const App: React.FC = () => {
       <Navbar />
       <div className="app__body">
         <Switch>
-          <Route exact={true} path="/" component={Home} />
+          <Route exact path="/" component={Home} />
           <ShowIf.Logged>
             <Route
               exact={true}

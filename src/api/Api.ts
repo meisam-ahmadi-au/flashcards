@@ -1,9 +1,9 @@
+import Axios from 'axios';
 import {
   firestore,
-  functions
+  functions,
 } from '../components/FirebaseAuthentication/FirebaseAuthentication';
 import { IUpdateCard } from '../util/interfaces';
-import Axios from 'axios';
 
 const retreiveTodaysCardsByCategoryId = async (
   categoryId: number,
@@ -11,7 +11,7 @@ const retreiveTodaysCardsByCategoryId = async (
 ) => {
   const { data } = await functions.httpsCallable('getTodaysCardsByCategoryId')({
     categoryId,
-    uid
+    uid,
   });
 
   const { cardSnapshot } = data;
@@ -53,14 +53,14 @@ const getAllCategories = async () => {
 
 const getAllCardsInCategory = async (uid: string, category: string) => {
   const { data } = await functions.httpsCallable('getAllCardsByCategoryName')({
-    category
+    category,
   });
   const { allCards } = data;
   return [...allCards];
 };
 
 const addCategory = async (category: string) =>
-  await functions.httpsCallable('addCategory')({ category });
+  functions.httpsCallable('addCategory')({ category });
 
 const deleteCard = async (category: string, cardId: string) =>
   functions.httpsCallable('deteleCard')({ category, cardId });
@@ -73,7 +73,7 @@ const updateCategory = (oldCategoryName: string) => async (
 ) =>
   functions.httpsCallable('updateCategory')({
     oldCategoryName,
-    newCategoryName
+    newCategoryName,
   });
 
 const getPronunciation = (text: string) => {
@@ -97,5 +97,5 @@ export default {
   deleteCard,
   deleteCategory,
   updateCategory,
-  getPronunciation
+  getPronunciation,
 };

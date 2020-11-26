@@ -10,12 +10,12 @@ import { routes } from '../../util/constants';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_GKEY,
-  authDomain: 'awesomeflashcard.firebaseapp.com',
-  databaseURL: 'https://awesomeflashcard.firebaseio.com',
-  projectId: 'awesomeflashcard',
-  storageBucket: 'awesomeflashcard.appspot.com',
+  authDomain: process.env.REACT__APP_AUTHDOMAIN,
+  databaseURL: process.env.REACT__APP_DATABASEURL,
+  projectId: process.env.REACT__APP_PROJECTID,
+  storageBucket: process.env.REACT__APP_STORAGEBUCKET,
   messagingSenderId: process.env.REACT_APP_MESSAGINGSENDERID,
-  appId: process.env.REACT_APP_APPID
+  appId: process.env.REACT_APP_APPID,
 };
 
 // Initialize Firebase
@@ -40,16 +40,16 @@ const FirebaseAuthentication = () => {
     signInOptions: [
       firebase.auth.EmailAuthProvider.PROVIDER_ID,
       firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-      firebase.auth.FacebookAuthProvider.PROVIDER_ID
+      firebase.auth.FacebookAuthProvider.PROVIDER_ID,
     ],
     callbacks: {
       signInSuccessWithAuthResult(authResult: any, redirectUrl: any) {
-        const user = authResult.user;
+        const { user } = authResult;
         dispatch(Actions.setUser(user));
         redirectUrl('/');
         return true;
-      }
-    }
+      },
+    },
   };
   // # endregion
   return <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />;
