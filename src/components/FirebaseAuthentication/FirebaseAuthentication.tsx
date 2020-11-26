@@ -10,10 +10,10 @@ import { routes } from '../../util/constants';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_GKEY,
-  authDomain: 'awesomeflashcard.firebaseapp.com',
-  databaseURL: 'https://awesomeflashcard.firebaseio.com',
-  projectId: 'awesomeflashcard',
-  storageBucket: 'awesomeflashcard.appspot.com',
+  authDomain: process.env.REACT__APP_AUTHDOMAIN,
+  databaseURL: process.env.REACT__APP_DATABASEURL,
+  projectId: process.env.REACT__APP_PROJECTID,
+  storageBucket: process.env.REACT__APP_STORAGEBUCKET,
   messagingSenderId: process.env.REACT_APP_MESSAGINGSENDERID,
   appId: process.env.REACT_APP_APPID,
 };
