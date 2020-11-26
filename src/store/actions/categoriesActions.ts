@@ -1,8 +1,8 @@
 import { Dispatch } from 'react';
-import Api from '../../api/Api';
-import { IReduxStates } from './../reducers/states';
-import { Actions } from './actionTypes';
 import { ThunkAction } from 'redux-thunk';
+import Api from '../../api/Api';
+import { IReduxStates } from '../reducers/states';
+import { Actions } from './actionTypes';
 
 type Action = { type: string; payload?: any };
 
@@ -10,15 +10,14 @@ type ThunkDispatchPromise = (
   a?: any
 ) => ThunkAction<Promise<any>, IReduxStates, {}, Action>;
 
-export const getAllCategories: ThunkDispatchPromise = () => async (
-  dispatch,
-  getState
-) => {
-  const { categories } = getState().categories;
+export const getAllCategories: ThunkDispatchPromise = (
+  refresh = false
+) => async (dispatch, getState) => {
+  let { categories } = getState().categories;
 
   if (categories.length === 0) {
     dispatch(Actions.loading());
-    const categories = await Api.getAllCategories();
+    categories = await Api.getAllCategories();
     if (categories) {
       dispatch(Actions.setCategories(categories));
     }
@@ -49,7 +48,7 @@ export const addCategoryAndUpdate = (category: string) => async (
 
 export const getCategoryByCategoryName: ThunkDispatchPromise = (
   categoryName: string
-) => async dispatch => {
+) => async (dispatch) => {
   dispatch(Actions.loading());
   dispatch(getAllCategories());
 };
@@ -61,7 +60,7 @@ export const updateCategoryThunk: ThunkDispatchPromise = (
   dispatch(Actions.loading());
   await Api.updateCategory(category)(newCategoryName);
   dispatch(Actions.cancelDialogue());
-  const newCategories = categories.map(cat => {
+  const newCategories = categories.map((cat) => {
     if (cat.category.trim().toLowerCase() === category.trim().toLowerCase()) {
       cat.category = newCategoryName.trim();
     }
