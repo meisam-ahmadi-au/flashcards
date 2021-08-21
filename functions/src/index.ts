@@ -3,7 +3,7 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import * as moment from 'moment';
-
+const cors = require('cors')({ origin: true });
 admin.initializeApp();
 const firestore = admin.firestore();
 
@@ -32,7 +32,7 @@ export const updateCardsCountOnCreate = functions.firestore
     );
 
     return otherInfoRef.update({
-      totalNumberOfCards: admin.firestore.FieldValue.increment(1)
+      totalNumberOfCards: admin.firestore.FieldValue.increment(1),
     });
   });
 
@@ -45,13 +45,13 @@ export const updateCardsCountOnDelete = functions.firestore
     );
 
     return otherInfoRef.update({
-      totalNumberOfCards: admin.firestore.FieldValue.increment(-1)
+      totalNumberOfCards: admin.firestore.FieldValue.increment(-1),
     });
   });
 
 export const addCategory = functions.https.onCall(
   async ({ category }: { category: string }, context) => {
-    const uid = context.auth!.uid;
+    const { uid } = context.auth!;
     const categoriesRef = firestore.collection(`otherInfo/${uid}/categories`);
 
     const newCategorySnapshot = await categoriesRef.get();
@@ -75,29 +75,28 @@ export const addCategory = functions.https.onCall(
         createdAt,
         totalNumberOfCards: 0,
         tags: '',
-        categoryId
+        categoryId,
       });
 
       return {
         category,
-        isSucceessful: true
+        isSucceessful: true,
       };
-    } else {
-      return new functions.https.HttpsError(
-        'already-exists',
-        'Category already exists',
-        {
-          isSucceessful: false,
-          reason: 'Category already exists'
-        }
-      );
     }
+    return new functions.https.HttpsError(
+      'already-exists',
+      'Category already exists',
+      {
+        isSucceessful: false,
+        reason: 'Category already exists',
+      }
+    );
   }
 );
 
 export const getAllCardsByCategoryName = functions.https.onCall(
   async ({ category }, context) => {
-    const uid = context.auth!.uid;
+    const { uid } = context.auth!;
     const { categoryId } = await getCategoryDetailByCategoryName(uid, category);
     const cardsRef = await firestore
       .collection(`cards/${uid}/${categoryId}`)
@@ -106,19 +105,19 @@ export const getAllCardsByCategoryName = functions.https.onCall(
     const allCards = cardsRef.docs.map(doc => ({
       ...doc.data(),
       categoryId,
-      cardId: doc.id
+      cardId: doc.id,
     }));
 
     return {
       allCards,
-      isSucceessful: true
+      isSucceessful: true,
     };
   }
 );
 
 export const deleteCategory = functions.https.onCall(
   async ({ category }, context) => {
-    const uid = context.auth!.uid;
+    const { uid } = context.auth!;
     const { categoryId } = await getCategoryDetailByCategoryName(uid, category);
     const categoryRef = await firestore.doc(
       `otherInfo/${uid}/categories/${categoryId}`
@@ -129,7 +128,7 @@ export const deleteCategory = functions.https.onCall(
     }
     return new functions.https.HttpsError('unknown', 'failed', {
       isSucceessful: false,
-      reason: 'category is not empty'
+      reason: 'category is not empty',
     });
   }
 );
@@ -139,14 +138,14 @@ export const getTodaysCardsByCategoryId = functions.https.onCall(
     const cardSnapshot = await retreiveTodaysCardsByCategoryId(categoryId, uid);
     return {
       cardSnapshot,
-      isSucceessful: true
+      isSucceessful: true,
     };
   }
 );
 
 export const deteleCard = functions.https.onCall(
   async ({ category, cardId }, context) => {
-    const uid = context.auth!.uid;
+    const { uid } = context.auth!;
     const { categoryId } = await getCategoryDetailByCategoryName(uid, category);
     return firestore
       .collection(`cards/${uid}/${categoryId}`)
@@ -157,7 +156,7 @@ export const deteleCard = functions.https.onCall(
         error =>
           new functions.https.HttpsError('unknown', 'failed', {
             isSucceessful: false,
-            reason: error
+            reason: error,
           })
       );
   }
@@ -165,7 +164,7 @@ export const deteleCard = functions.https.onCall(
 
 export const getAllCategories = functions.https.onCall(
   async (empty, context) => {
-    const uid = context.auth!.uid;
+    const { uid } = context.auth!;
 
     if (!uid) {
       return;
@@ -202,7 +201,7 @@ export const getAllCategories = functions.https.onCall(
 
 export const updateCategory = functions.https.onCall(
   async ({ oldCategoryName, newCategoryName }, context) => {
-    const uid = context.auth!.uid;
+    const { uid } = context.auth!;
     const categoriesRef = firestore.collection(`otherInfo/${uid}/categories`);
     const newCategorySnapshot = await categoriesRef.get();
     let categoryExists = false;
@@ -231,7 +230,7 @@ export const updateCategory = functions.https.onCall(
 
     return new functions.https.HttpsError('unknown', 'failed', {
       isSucceessful: false,
-      reason: 'category name already exists'
+      reason: 'category name already exists',
     });
   }
 );
@@ -255,9 +254,7 @@ const retreiveTodaysCardsByCategoryId = async (
   categoryId: number,
   uid: string
 ) => {
-  const startOfToday = moment()
-    .startOf('day')
-    .valueOf();
+  const startOfToday = moment().startOf('day').valueOf();
 
   const cardsRef = await firestore
     .collection(`cards/${uid}/${categoryId}`)
@@ -267,7 +264,7 @@ const retreiveTodaysCardsByCategoryId = async (
 
   const cardsSnapshot = cardsRef.docs.map(doc => ({
     ...doc.data(),
-    cardId: doc.id
+    cardId: doc.id,
   }));
 
   return cardsSnapshot;
