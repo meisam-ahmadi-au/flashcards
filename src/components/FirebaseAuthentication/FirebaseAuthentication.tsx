@@ -15,7 +15,7 @@ const firebaseConfig = {
   projectId: 'awesomeflashcard',
   storageBucket: 'awesomeflashcard.appspot.com',
   messagingSenderId: process.env.REACT_APP_MESSAGINGSENDERID,
-  appId: process.env.REACT_APP_APPID
+  appId: process.env.REACT_APP_APPID,
 };
 
 // Initialize Firebase
@@ -29,7 +29,7 @@ export const googleSignIn = () => auth.signInWithPopup(provider);
 export const signout = () => auth.signOut();
 export const signInWithUserName = auth.signInWithEmailAndPassword;
 export const firestore = firebase.firestore();
-export const functions = firebase.functions();
+export const functions = firebase.app().functions('us-central1');
 
 const FirebaseAuthentication = () => {
   // #region uiConfig
@@ -40,16 +40,16 @@ const FirebaseAuthentication = () => {
     signInOptions: [
       firebase.auth.EmailAuthProvider.PROVIDER_ID,
       firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-      firebase.auth.FacebookAuthProvider.PROVIDER_ID
+      firebase.auth.FacebookAuthProvider.PROVIDER_ID,
     ],
     callbacks: {
       signInSuccessWithAuthResult(authResult: any, redirectUrl: any) {
-        const user = authResult.user;
+        const { user } = authResult;
         dispatch(Actions.setUser(user));
         redirectUrl('/');
         return true;
-      }
-    }
+      },
+    },
   };
   // # endregion
   return <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />;
