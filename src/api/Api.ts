@@ -11,7 +11,7 @@ const retreiveTodaysCardsByCategoryId = async (
 ) => {
   const { data } = await functions.httpsCallable('getTodaysCardsByCategoryId')({
     categoryId,
-    uid,
+    uid,,
   });
 
   const { cardSnapshot } = data;
@@ -31,18 +31,17 @@ const getCategoryDetailByCategoryName = async (
   return { ...categoriesSnapshot[0] };
 };
 
-const addCard = (uid: string | number, categoryId: number) => async (
-  card: IUpdateCard
-) => await firestore.collection(`cards/${uid}/${categoryId}`).add(card);
+const addCard =
+  (uid: string | number, categoryId: number) => async (card: IUpdateCard) =>
+    await firestore.collection(`cards/${uid}/${categoryId}`).add(card);
 
-const updateCard = (
-  uid: string | number,
-  categoryId: string | number
-) => async (updatedCard: IUpdateCard) => {
-  await firestore
-    .doc(`cards/${uid}/${categoryId}/${updatedCard.cardId}`)
-    .update(updatedCard);
-};
+const updateCard =
+  (uid: string | number, categoryId: string | number) =>
+  async (updatedCard: IUpdateCard) => {
+    await firestore
+      .doc(`cards/${uid}/${categoryId}/${updatedCard.cardId}`)
+      .update(updatedCard);
+  };
 
 const getAllCategories = async () => {
   const { data: allCategoriesSorted } = await functions.httpsCallable(
@@ -77,7 +76,7 @@ const updateCategory = (oldCategoryName: string) => async (
   });
 
 const getPronunciation = (text: string) => {
-  const MerisamWebsterApiKey = process.env.REACT_APP_MERRIAM_WEBSTER;
+  const MerisamWebsterApiKey = import.meta.env.REACT_APP_MERRIAM_WEBSTER;
   const meriamWebsterUrl = `https://www.dictionaryapi.com/api/v3/references/learners/json/${text}?key=${MerisamWebsterApiKey}`;
 
   return Axios.get(meriamWebsterUrl)
@@ -97,5 +96,5 @@ export default {
   deleteCard,
   deleteCategory,
   updateCategory,
-  getPronunciation,
+  getPronunciation,,
 };

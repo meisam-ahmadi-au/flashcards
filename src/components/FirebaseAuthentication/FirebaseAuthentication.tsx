@@ -9,13 +9,14 @@ import { Actions } from '../../store/actions/actionTypes';
 import { routes } from '../../util/constants';
 
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_GKEY,
-  authDomain: process.env.REACT_APP_AUTHDOMAIN,
-  databaseURL: process.env.REACT_APP_DATABASEURL,
-  projectId: process.env.REACT_APP_PROJECTID,
-  storageBucket: process.env.REACT_APP_STORAGEBUCKET,
-  messagingSenderId: process.env.REACT_APP_MESSAGINGSENDERID,
-  appId: process.env.REACT_APP_APPID,
+  apiKey: import.meta.env.VITE_APP_GKEY,
+  authDomain: import.meta.env.VITE_APP_AUTHDOMAIN,
+  databaseURL: import.meta.env.VITE_APP_DATABASEURL,
+  projectId: import.meta.env.VITE_APP_PROJECTID,
+  storageBucket: import.meta.env.VITE_APP_STORAGEBUCKET,
+  messagingSenderId: import.meta.env.VITE_APP_MESSAGINGSENDERID,
+  appId: import.meta.env.VITE_APP_APPID,
+  measurementId: import.meta.env.VITE_APP_MEASUREMENTID,
 };
 
 // Initialize Firebase
@@ -29,7 +30,7 @@ export const googleSignIn = () => auth.signInWithPopup(provider);
 export const signout = () => auth.signOut();
 export const signInWithUserName = auth.signInWithEmailAndPassword;
 export const firestore = firebase.firestore();
-export const functions = firebase.functions();
+export const functions = firebase.app().functions('us-central1');
 
 const FirebaseAuthentication = () => {
   // #region uiConfig
